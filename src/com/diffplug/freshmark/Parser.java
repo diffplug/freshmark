@@ -54,32 +54,32 @@ public class Parser {
 	/**
 	 * Compiles an input string to an output string, using the given compiler to compile each section.
 	 * 
-	 * @param input		the raw input string
+	 * @param fullInput	the raw input string
 	 * @param compiler	used to compile each section
 	 * @return
 	 */
-	public String compile(String input, Compiler compiler) {
-		StringBuilder result = new StringBuilder(input.length() * 3 / 2);
+	public String compile(String fullInput, Compiler compiler) {
+		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);
 		/** Associates errors with the part of the input that caused it. */
 		class ErrorFormatter {
 			int numReadSoFar = 0;
 
 			Consumer<String> wrap(Consumer<String> action) {
-				return txt -> {
+				return input -> {
 					try {
-						action.accept(txt);
-						String toRead = input.substring(numReadSoFar);
-						if (toRead.startsWith(input)) {
+						action.accept(input);
+						String toRead = fullInput.substring(numReadSoFar);
+						if (toRead.startsWith(fullInput)) {
 							// body
-							numReadSoFar += txt.length();
+							numReadSoFar += input.length();
 						} else {
 							// tag
-							String tag = prefix + txt + postfix;
+							String tag = prefix + input + postfix;
 							assert(toRead.startsWith(tag));
 							numReadSoFar += tag.length();
 						}
 					} catch (Throwable e) {
-						long problemStart = 1 + countNewlines(input.substring(0, numReadSoFar));
+						long problemStart = 1 + countNewlines(fullInput.substring(0, numReadSoFar));
 						throw new RuntimeException("Error on line " + problemStart + ": " + e.getMessage(), e);
 					}
 				};
@@ -148,7 +148,7 @@ public class Parser {
 		}
 		ErrorFormatter error = new ErrorFormatter();
 		State state = new State();
-		bodyAndTags(input, error.wrap(state::body), error.wrap(state::tag));
+		bodyAndTags(fullInput, error.wrap(state::body), error.wrap(state::tag));
 		state.finish();
 		return result.toString();
 	}
