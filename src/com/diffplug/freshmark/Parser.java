@@ -90,6 +90,7 @@ public class Parser {
 			}
 		}
 		/** Maintains the parse state. */
+		@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = {"UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS", "SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification = "It's a bug in FindBugs.  TODO: report")
 		class State {
 			/** The section for which we're looking for a close tag. */
 			String section;
