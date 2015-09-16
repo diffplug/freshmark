@@ -35,11 +35,10 @@ public class JsHarnessTest {
 
 	@Test
 	public void testBasicScript() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
-				.addScript("var txt = 'abc';")
-				.addScript("var int = 123;")
-				.addScript("var float = 123.5;")
-				.build();
+		ScriptEngine engine = JsHarness.create().build();
+		engine.eval("var txt = 'abc';" +
+				"var int = 123;" +
+				"var float = 123.5;");
 		Assert.assertEquals("abc", engine.eval("txt"));
 		Assert.assertEquals(123, engine.eval("int"));
 		Assert.assertEquals(123.5, engine.eval("float"));
@@ -52,9 +51,9 @@ public class JsHarnessTest {
 	public void testVoid0() throws ScriptException {
 		AtomicBoolean wasRun = new AtomicBoolean(false);
 		ScriptEngine engine = JsHarness.create()
-				.setName("func0").toVoid0(() -> wasRun.set(true))
+				.setName("void0").toVoid0(() -> wasRun.set(true))
 				.build();
-		engine.eval("func0()");
+		engine.eval("void0()");
 		Assert.assertEquals(true, wasRun.get());
 	}
 
@@ -62,9 +61,9 @@ public class JsHarnessTest {
 	public void testVoid1() throws ScriptException {
 		AtomicReference<String> arg1 = new AtomicReference<>();
 		ScriptEngine engine = JsHarness.create()
-				.setName("func1").toVoid1(arg1::set)
+				.setName("void1").toVoid1(arg1::set)
 				.build();
-		engine.eval("func1('it lives!')");
+		engine.eval("void1('it lives!')");
 		Assert.assertEquals("it lives!", arg1.get());
 	}
 
@@ -73,12 +72,12 @@ public class JsHarnessTest {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		ScriptEngine engine = JsHarness.create()
-				.setName("func2").toVoid2((a, b) -> {
+				.setName("void2").toVoid2((a, b) -> {
 					arg1.set(a);
 					arg2.set(b);
 				})
 				.build();
-		engine.eval("func2('a', 'b')");
+		engine.eval("void2('a', 'b')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
 	}
@@ -89,13 +88,13 @@ public class JsHarnessTest {
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		ScriptEngine engine = JsHarness.create()
-				.setName("func3").toVoid3((a, b, c) -> {
+				.setName("void3").toVoid3((a, b, c) -> {
 					arg1.set(a);
 					arg2.set(b);
 					arg3.set(c);
 				})
 				.build();
-		engine.eval("func3('a', 'b', 'c')");
+		engine.eval("void3('a', 'b', 'c')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
 		Assert.assertEquals("c", arg3.get());
@@ -108,14 +107,14 @@ public class JsHarnessTest {
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		AtomicReference<Object> arg4 = new AtomicReference<>();
 		ScriptEngine engine = JsHarness.create()
-				.setName("func4").toVoid4((a, b, c, d) -> {
+				.setName("void4").toVoid4((a, b, c, d) -> {
 					arg1.set(a);
 					arg2.set(b);
 					arg3.set(c);
 					arg4.set(d);
 				})
 				.build();
-		engine.eval("func4('a', 'b', 'c', 'd')");
+		engine.eval("void4('a', 'b', 'c', 'd')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
 		Assert.assertEquals("c", arg3.get());

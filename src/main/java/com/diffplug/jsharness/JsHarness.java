@@ -32,7 +32,6 @@ import javax.script.ScriptException;
  * @author ntwigg
  */
 public class JsHarness {
-	private StringBuilder initScript = new StringBuilder();
 	private Map<String, Object> map = new HashMap<>();
 
 	protected JsHarness() {}
@@ -40,12 +39,6 @@ public class JsHarness {
 	/** Creates a new NashornHarness and returns it. */
 	public static JsHarness create() {
 		return new JsHarness();
-	}
-
-	/** Adds a script to the harness. */
-	public JsHarness addScript(String script) {
-		initScript.append(script);
-		return this;
 	}
 
 	/** Sets a name in the script to be a value or a function. */
@@ -90,7 +83,7 @@ public class JsHarness {
 		// @formatter:on
 	}
 
-	public String mapInitScript(String mapName) {
+	protected String mapInitScript(String mapName) {
 		StringBuilder builder = new StringBuilder();
 		map.entrySet().forEach(entry -> {
 			builder.append("var ");
@@ -109,7 +102,6 @@ public class JsHarness {
 		ScriptEngine jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
 		ScriptContext context = jsEngine.getContext();
 
-		jsEngine.eval(initScript.toString());
 		String mapName = "abcd";
 		context.setAttribute(mapName, map, ScriptContext.ENGINE_SCOPE);
 		jsEngine.eval(mapInitScript(mapName));
