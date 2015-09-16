@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015 DiffPlug
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.diffplug.freshmark;
 
 import org.junit.Assert;
@@ -26,13 +41,13 @@ public class ParserTest {
 	@Test
 	public void testCompileNoTags() {
 		// no change reguired == no problem!
-		testCaseCompileSuccess("empty.md", TestResource.getTestResource("empty.md"));
-		testCaseCompileSuccess("nocomment.md", TestResource.getTestResource("nocomment.md"));
+		testCaseCompileSuccess("empty.txt", TestResource.getTestResource("empty.txt"));
+		testCaseCompileSuccess("nocomment.txt", TestResource.getTestResource("nocomment.txt"));
 	}
 
 	@Test
 	public void testCompileWiring() {
-		testCaseCompileSuccess("simple.md", StringPrinter.buildStringFromLines(
+		testCaseCompileSuccess("simple.txt", StringPrinter.buildStringFromLines(
 				"Some stuff",
 				"Nothing special",
 				"section: simple",
@@ -40,8 +55,7 @@ public class ParserTest {
 				"input: ",
 				"Does this work?",
 				"",
-				"Why yes!  Yes it does."
-				));
+				"Why yes!  Yes it does."));
 	}
 
 	static void testCaseCompileSuccess(String file, String expected) {
@@ -54,17 +68,18 @@ public class ParserTest {
 
 	@Test
 	public void testCompileUnclosed() {
-		testCaseCompileError("unclosed.md", "Ended without a close tag for 'simple'");
-		testCaseCompileError("unclosedthenstuff.md", "Ended without a close tag for 'simple'");
+		testCaseCompileError("unclosed.txt", "Ended without a close tag for 'simple'");
+		testCaseCompileError("unclosedthenstuff.txt", "Ended without a close tag for 'simple'");
 	}
 
 	@Test
 	public void testCompileMismatched() {
-		testCaseCompileError("mismatched.md", "Error on line 7: Expecting '/simple'");
+		testCaseCompileError("mismatched.txt", "Error on line 7: Expecting '/simple'");
 	}
+
 	@Test
 	public void testCompileNoProgram() {
-		testCaseCompileError("noprogram.md", "Error on line 3: Section doesn't contain a program.");
+		testCaseCompileError("noprogram.txt", "Error on line 3: Section doesn't contain a program.");
 	}
 
 	static void testCaseCompileError(String file, String expected) {
