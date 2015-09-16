@@ -15,7 +15,7 @@
  */
 package com.diffplug.jsharness;
 
-import static com.diffplug.jsharness.JsFuncs.*;
+import static com.diffplug.jsharness.ArityN.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +25,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+/**
+ * Harness for setting up a JavaScript engine which
+ * has had all of the following variables setup.
+ * 
+ * @author ntwigg
+ */
 public class JsHarness {
 	private StringBuilder initScript = new StringBuilder();
 	private Map<String, Object> map = new HashMap<>();
@@ -47,22 +53,16 @@ public class JsHarness {
 		return new NameSetter(name);
 	}
 
-	static void assertThat(boolean value, String error, Object errorObj) {
-		if (!value) {
-			throw new IllegalArgumentException(error.replace("%s", errorObj.toString()));
-		}
-	}
-
 	/** Checks that the given name is a valid identifier. */
 	static String checkValidIdentifier(String name) {
-		assertThat(name.length() > 0 &&
+		Check.that(name.length() > 0 &&
 				Character.isJavaIdentifierStart(name.codePointAt(0)) &&
 				name.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart),
-				"'%s' is not a valid identifier", name);
+				"'%0' is not a valid identifier", name);
 		return name;
 	}
 
-	/** API for setting cnames in the JsHarness. */
+	/** Fluent API for setting names in this JsHarness. */
 	public class NameSetter {
 		private final String name;
 
@@ -115,5 +115,10 @@ public class JsHarness {
 		jsEngine.eval(mapInitScript(mapName));
 
 		return jsEngine;
+	}
+
+	/** Returns a {@link TypedScriptEngine} with the stuff above. */
+	public TypedScriptEngine buildTyped() throws ScriptException {
+		return new TypedScriptEngine(build());
 	}
 }
