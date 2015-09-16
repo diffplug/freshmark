@@ -69,7 +69,7 @@ public class Parser {
 					try {
 						action.accept(input);
 						String toRead = fullInput.substring(numReadSoFar);
-						if (toRead.startsWith(fullInput)) {
+						if (toRead.startsWith(input)) {
 							// body
 							numReadSoFar += input.length();
 						} else {
@@ -89,6 +89,7 @@ public class Parser {
 				return (int) str.codePoints().filter(c -> c == '\n').count();
 			}
 		}
+
 		/** Maintains the parse state. */
 		@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = {"UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS", "SIC_INNER_SHOULD_BE_STATIC_ANON"}, justification = "It's a bug in FindBugs.  TODO: report")
 		class State {
@@ -100,11 +101,12 @@ public class Parser {
 			String input;
 
 			void body(String body) {
-				assert(program == null);
 				assert(input == null);
 				if (section == null) {
+					assert(program == null);
 					result.append(body);
 				} else {
+					assert(program != null);
 					input = body;
 				}
 			}

@@ -30,7 +30,7 @@ public class TestResource {
 	public static String getTestResource(String filename) {
 		return Errors.rethrow().get(() -> {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			InputStream inputStream = TestResource.class.getResourceAsStream(filename);
+			InputStream inputStream = TestResource.class.getResourceAsStream("/" + filename);
 			byte[] buffer = new byte[1024];
 			int length = 0;
 			while ((length = inputStream.read(buffer)) != -1) {
