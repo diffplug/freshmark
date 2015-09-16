@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.jsharness;
+package com.diffplug.scriptbox;
 
-import static com.diffplug.jsharness.ArityN.*;
+import static com.diffplug.scriptbox.ArityN.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +31,14 @@ import javax.script.ScriptException;
  * 
  * @author ntwigg
  */
-public class JsHarness {
+public class ScriptBox {
 	private Map<String, Object> map = new HashMap<>();
 
-	protected JsHarness() {}
+	protected ScriptBox() {}
 
 	/** Creates a new NashornHarness and returns it. */
-	public static JsHarness create() {
-		return new JsHarness();
+	public static ScriptBox create() {
+		return new ScriptBox();
 	}
 
 	/** Sets a name in the script to be a value or a function. */
@@ -63,23 +63,23 @@ public class JsHarness {
 			this.name = checkValidIdentifier(name);
 		}
 
-		public JsHarness toValue(Object value) {
+		public ScriptBox toValue(Object value) {
 			map.put(name, value);
-			return JsHarness.this;
+			return ScriptBox.this;
 		}
 
 		// @formatter:off
-		public 				JsHarness toVoid0(Void0 value) { return toValue(value); }
-		public <A>			JsHarness toVoid1(Void1<A> value) { return toValue(value); }
-		public <A, B>		JsHarness toVoid2(Void2<A, B> value) { return toValue(value); }
-		public <A, B, C>	JsHarness toVoid3(Void3<A, B, C> value) { return toValue(value); }
-		public <A, B, C, D>	JsHarness toVoid4(Void4<A, B, C, D> value) { return toValue(value); }
+		public 				ScriptBox toVoid0(Void0 value) { return toValue(value); }
+		public <A>			ScriptBox toVoid1(Void1<A> value) { return toValue(value); }
+		public <A, B>		ScriptBox toVoid2(Void2<A, B> value) { return toValue(value); }
+		public <A, B, C>	ScriptBox toVoid3(Void3<A, B, C> value) { return toValue(value); }
+		public <A, B, C, D>	ScriptBox toVoid4(Void4<A, B, C, D> value) { return toValue(value); }
 
-		public <R>				JsHarness toFunc0(Func0<R> value) { return toValue(value); }
-		public <A, R>			JsHarness toFunc1(Func1<A, R> value) { return toValue(value); }
-		public <A, B, R>		JsHarness toFunc2(Func2<A, B, R> value) { return toValue(value); }
-		public <A, B, C, R>		JsHarness toFunc3(Func3<A, B, C, R> value) { return toValue(value); }
-		public <A, B, C, D, R>	JsHarness toFunc4(Func4<A, B, C, D, R> value) { return toValue(value); }
+		public <R>				ScriptBox toFunc0(Func0<R> value) { return toValue(value); }
+		public <A, R>			ScriptBox toFunc1(Func1<A, R> value) { return toValue(value); }
+		public <A, B, R>		ScriptBox toFunc2(Func2<A, B, R> value) { return toValue(value); }
+		public <A, B, C, R>		ScriptBox toFunc3(Func3<A, B, C, R> value) { return toValue(value); }
+		public <A, B, C, D, R>	ScriptBox toFunc4(Func4<A, B, C, D, R> value) { return toValue(value); }
 		// @formatter:on
 	}
 

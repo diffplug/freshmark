@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.jsharness;
+package com.diffplug.scriptbox;
 
 /**
  * Turns out that if you just give an `@FunctionalInterface`

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.jsharness;
+package com.diffplug.scriptbox;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -24,10 +24,12 @@ import javax.script.ScriptException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class JsHarnessTest {
+import com.diffplug.scriptbox.ScriptBox;
+
+public class ScriptBoxNashornTest {
 	@Test
 	public void testBasicExpressions() throws ScriptException {
-		ScriptEngine engine = JsHarness.create().build();
+		ScriptEngine engine = ScriptBox.create().build();
 		Assert.assertEquals("abc", engine.eval("'abc'"));
 		Assert.assertEquals(123, engine.eval("123"));
 		Assert.assertEquals(123.5, engine.eval("123.5"));
@@ -35,7 +37,7 @@ public class JsHarnessTest {
 
 	@Test
 	public void testBasicScript() throws ScriptException {
-		ScriptEngine engine = JsHarness.create().build();
+		ScriptEngine engine = ScriptBox.create().build();
 		engine.eval("var txt = 'abc';" +
 				"var int = 123;" +
 				"var float = 123.5;");
@@ -50,7 +52,7 @@ public class JsHarnessTest {
 	@Test
 	public void testVoid0() throws ScriptException {
 		AtomicBoolean wasRun = new AtomicBoolean(false);
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("void0").toVoid0(() -> wasRun.set(true))
 				.build();
 		engine.eval("void0()");
@@ -60,7 +62,7 @@ public class JsHarnessTest {
 	@Test
 	public void testVoid1() throws ScriptException {
 		AtomicReference<String> arg1 = new AtomicReference<>();
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("void1").toVoid1(arg1::set)
 				.build();
 		engine.eval("void1('it lives!')");
@@ -71,7 +73,7 @@ public class JsHarnessTest {
 	public void testVoid2() throws ScriptException {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("void2").toVoid2((a, b) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -87,7 +89,7 @@ public class JsHarnessTest {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("void3").toVoid3((a, b, c) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -106,7 +108,7 @@ public class JsHarnessTest {
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		AtomicReference<Object> arg4 = new AtomicReference<>();
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("void4").toVoid4((a, b, c, d) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -126,7 +128,7 @@ public class JsHarnessTest {
 	//////////////////////////////
 	@Test
 	public void testFunc0() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("func0").toFunc0(() -> "wassup")
 				.build();
 		Assert.assertEquals("wassup", engine.eval("func0()"));
@@ -134,7 +136,7 @@ public class JsHarnessTest {
 
 	@Test
 	public void testFunc1() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("func1").toFunc1(a -> a)
 				.build();
 		Assert.assertEquals("identity", engine.eval("func1('identity')"));
@@ -144,7 +146,7 @@ public class JsHarnessTest {
 
 	@Test
 	public void testFunc2() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("func2").toFunc2((String a, String b) -> a + b)
 				.build();
 		Assert.assertEquals("ab", engine.eval("func2('a', 'b')"));
@@ -152,7 +154,7 @@ public class JsHarnessTest {
 
 	@Test
 	public void testFunc3() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("func3").toFunc3((String a, String b, String c) -> a + b + c)
 				.build();
 		Assert.assertEquals("abc", engine.eval("func3('a', 'b', 'c')"));
@@ -160,7 +162,7 @@ public class JsHarnessTest {
 
 	@Test
 	public void testFunc4() throws ScriptException {
-		ScriptEngine engine = JsHarness.create()
+		ScriptEngine engine = ScriptBox.create()
 				.setName("func4").toFunc4((String a, String b, String c, String d) -> a + b + c + d)
 				.build();
 		Assert.assertEquals("abcd", engine.eval("func4('a', 'b', 'c', 'd')"));
