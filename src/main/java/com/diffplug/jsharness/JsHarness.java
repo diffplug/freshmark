@@ -76,19 +76,17 @@ public class JsHarness {
 		}
 
 		// @formatter:off
-		public 				JsHarness toVoid0(Void0 value) { return toVoidN(value); }
-		public <A>			JsHarness toVoid1(Void1<A> value) { return toVoidN(value); }
-		public <A, B>		JsHarness toVoid2(Void2<A, B> value) { return toVoidN(value); }
-		public <A, B, C>	JsHarness toVoid3(Void3<A, B, C> value) { return toVoidN(value); }
-		public <A, B, C, D>	JsHarness toVoid4(Void4<A, B, C, D> value) { return toVoidN(value); }
-		public JsHarness toVoidN(VoidN value) { return toValue(value); }
+		public 				JsHarness toVoid0(Void0 value) { return toValue(value); }
+		public <A>			JsHarness toVoid1(Void1<A> value) { return toValue(value); }
+		public <A, B>		JsHarness toVoid2(Void2<A, B> value) { return toValue(value); }
+		public <A, B, C>	JsHarness toVoid3(Void3<A, B, C> value) { return toValue(value); }
+		public <A, B, C, D>	JsHarness toVoid4(Void4<A, B, C, D> value) { return toValue(value); }
 
-		public <R>				JsHarness toFunc0(Func0<R> value) { return toFuncN(value); }
-		public <A, R>			JsHarness toFunc1(Func1<A, R> value) { return toFuncN(value); }
-		public <A, B, R>		JsHarness toFunc2(Func2<A, B, R> value) { return toFuncN(value); }
-		public <A, B, C, R>		JsHarness toFunc3(Func3<A, B, C, R> value) { return toFuncN(value); }
-		public <A, B, C, D, R>	JsHarness toFunc4(Func4<A, B, C, D, R> value) { return toFuncN(value); }
-		public JsHarness toFuncN(FuncN value) { return toValue(value); }
+		public <R>				JsHarness toFunc0(Func0<R> value) { return toValue(value); }
+		public <A, R>			JsHarness toFunc1(Func1<A, R> value) { return toValue(value); }
+		public <A, B, R>		JsHarness toFunc2(Func2<A, B, R> value) { return toValue(value); }
+		public <A, B, C, R>		JsHarness toFunc3(Func3<A, B, C, R> value) { return toValue(value); }
+		public <A, B, C, D, R>	JsHarness toFunc4(Func4<A, B, C, D, R> value) { return toValue(value); }
 		// @formatter:on
 	}
 

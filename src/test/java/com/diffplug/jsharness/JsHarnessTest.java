@@ -15,6 +15,7 @@
  */
 package com.diffplug.jsharness;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -122,20 +123,5 @@ public class JsHarnessTest {
 		Assert.assertEquals("b", arg2.get());
 		Assert.assertEquals("c", arg3.get());
 		Assert.assertEquals("d", arg4.get());
-	}
-
-	@Test
-	public void testVoidN() throws ScriptException {
-		AtomicReference<Object[]> argArray = new AtomicReference<>();
-		ScriptEngine engine = JsHarness.create()
-				.setName("voidN").toVoidN((args) -> {
-					argArray.set(args);
-				})
-				.build();
-		// execute a script that m
-		engine.eval("voidN('a', 'b', 'c', 'd', 'e', 'f', 'g')");
-		Assert.assertArrayEquals(new Object[]{
-				"a", "b", "c", "d", "e", "f", "g"
-		}, argArray.get());
 	}
 }
