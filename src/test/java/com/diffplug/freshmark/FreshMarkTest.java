@@ -15,7 +15,11 @@
  */
 package com.diffplug.freshmark;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +29,7 @@ public class FreshMarkTest {
 	public void testPrefixDelimReplacement() {
 		String before = TestResource.getTestResource("javadoc_before.txt");
 		String after = TestResource.getTestResource("javadoc_after.txt");
-		String afterActual = FreshMark.prefixDelimReplacement(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
+		String afterActual = FreshMark.prefixDelimReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
 		Assert.assertEquals(after, afterActual);
 	}
 
@@ -35,5 +39,23 @@ public class FreshMarkTest {
 		String after = TestResource.getTestResource("template_after.txt");
 		String afterActual = FreshMark.template(before, key -> key.toUpperCase(Locale.US));
 		Assert.assertEquals(after, afterActual);
+	}
+
+	@Test
+	public void testFull() {
+		String before = TestResource.getTestResource("full_before.txt");
+		String after = TestResource.getTestResource("full_after.txt");
+
+		Map<String, String> props = new HashMap<>();
+		props.put("stable", "3.2.0");
+		props.put("version", "3.3.0-SNAPSHOT");
+		props.put("group", "com.diffplug.durian");
+		props.put("name", "durian");
+		props.put("org", "diffplug");
+		List<String> warnings = new ArrayList<>();
+		FreshMark freshmark = new FreshMark(props, warnings::add);
+		String afterActual = freshmark.compile(before);
+		Assert.assertEquals(after, afterActual);
+		Assert.assertTrue(warnings.isEmpty());
 	}
 }

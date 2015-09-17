@@ -40,6 +40,12 @@ public class ScriptBox {
 		return new ScriptBox();
 	}
 
+	/** Sets all of the properties contained in the given map. */
+	public ScriptBox setAll(Map<String, ?> map) {
+		names.putAll(map);
+		return this;
+	}
+
 	/** Sets a name in the script to be a value or a function. */
 	public NameSetter set(String name) {
 		return new NameSetter(name);

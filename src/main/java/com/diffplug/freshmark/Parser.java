@@ -20,8 +20,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-	private final String prefix, postfix;
-	private final Pattern pattern;
+	final String prefix, postfix;
+	final Pattern pattern;
 
 	public Parser(String name) {
 		prefix = "<!---" + name;
@@ -134,7 +134,7 @@ public class Parser {
 						throw new IllegalArgumentException("Expecting '/" + section + "'");
 					}
 					// and we found one!  compile it and accumulate the result
-					String chunk = compiler.compile(section, program, input);
+					String chunk = compiler.compileSection(section, program, input);
 					result.append(chunk);
 					// wipe the state
 					section = null;

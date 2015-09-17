@@ -15,6 +15,11 @@
  */
 package com.diffplug.freshmark;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,23 +32,57 @@ import com.diffplug.scriptbox.TypedScriptEngine;
 public class FreshMark implements Compiler {
 	static final Parser parser = new Parser("freshmark");
 
-	public FreshMark(Function<String, String> template) {
-		
+	private final Map<String, ?> properties;
+	private final Function<String, String> template;
+
+	public FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
+		this.properties = properties;
+		this.template = key -> {
+			Object value = properties.get(key);
+			if (value != null) {
+				return Objects.toString(value);
+			} else {
+				warningStream.accept("Unknown key '" + key + "'");
+				return key + "=UNKNOWN";
+			}
+		};
+	}
+
+	/** Compiles the given document. */
+	public String compile(String input) {
+		return parser.compile(input, this);
 	}
 
 	@Override
-	public String compile(String section, String program, String input) {
+	public String compileSection(String section, String program, String input) {
 		return Errors.rethrow().get(() -> {
 			TypedScriptEngine engine = ScriptBox.create()
+					.setAll(properties)
 					.set("link").toFunc2(FreshMark::link)
 					.set("image").toFunc2(FreshMark::image)
 					.set("shield").toFunc4(FreshMark::shield)
-					.set("prefixDelimReplacement").toFunc4(FreshMark::prefixDelimReplacement)
+					.set("prefixDelimReplace").toFunc4(FreshMark::prefixDelimReplace)
 					.buildTyped(Language.nashorn());
 
+			// apply the templating engine to the program
 			engine.getRaw().put("input", input);
-			engine.eval(program);
-			return engine.get("output", String.class);
+			engine.eval(template(program, template));
+			String compiled = engine.get("output", String.class);
+			if (compiled.length() == 0) {
+				compiled = "\n";
+			} else {
+				if (compiled.charAt(0) != '\n') {
+					compiled = "\n" + compiled;
+				}
+				if (compiled.charAt(compiled.length() - 1) != '\n') {
+					compiled = compiled + "\n";
+				}
+			}
+			return parser.prefix + " " + section + "\n" +
+			program +
+			parser.postfix +
+			compiled +
+			parser.prefix + " /" + section + " " + parser.postfix;
 		});
 	}
 
@@ -63,11 +102,13 @@ public class FreshMark implements Compiler {
 	}
 
 	private static String shieldEscape(String raw) {
-		return raw.replace("_", "__").replace("-", "--").replace(" ", "_");
+		return Errors.rethrow().get(() -> URLEncoder.encode(
+				raw.replace("_", "__").replace("-", "--").replace(" ", "_")
+				, StandardCharsets.UTF_8.name()));
 	}
 
 	/** Replaces everything between the  */
-	static String prefixDelimReplacement(String input, String prefix, String delim, String replacement) {
+	static String prefixDelimReplace(String input, String prefix, String delim, String replacement) {
 		StringBuilder builder = new StringBuilder(input.length() * 3 / 2);
 
 		int lastElement = 0;
