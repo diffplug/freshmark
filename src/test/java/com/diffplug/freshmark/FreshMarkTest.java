@@ -15,6 +15,8 @@
  */
 package com.diffplug.freshmark;
 
+import java.util.Locale;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,6 +26,14 @@ public class FreshMarkTest {
 		String before = TestResource.getTestResource("javadoc_before.txt");
 		String after = TestResource.getTestResource("javadoc_after.txt");
 		String afterActual = FreshMark.prefixDelimReplacement(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
+		Assert.assertEquals(after, afterActual);
+	}
+
+	@Test
+	public void testTemplate() {
+		String before = TestResource.getTestResource("template_before.txt");
+		String after = TestResource.getTestResource("template_after.txt");
+		String afterActual = FreshMark.template(before, key -> key.toUpperCase(Locale.US));
 		Assert.assertEquals(after, afterActual);
 	}
 }

@@ -56,7 +56,7 @@ public class Parser {
 	 * 
 	 * @param fullInput	the raw input string
 	 * @param compiler	used to compile each section
-	 * @return
+	 * @return 			the compiled output string
 	 */
 	public String compile(String fullInput, Compiler compiler) {
 		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);

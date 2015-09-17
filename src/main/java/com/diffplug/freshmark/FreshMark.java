@@ -15,6 +15,7 @@
  */
 package com.diffplug.freshmark;
 
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,10 @@ import com.diffplug.scriptbox.TypedScriptEngine;
 
 public class FreshMark implements Compiler {
 	static final Parser parser = new Parser("freshmark");
+
+	public FreshMark(Function<String, String> template) {
+		
+	}
 
 	@Override
 	public String compile(String section, String program, String input) {
@@ -42,16 +47,18 @@ public class FreshMark implements Compiler {
 		});
 	}
 
-	public static String link(String text, String url) {
+	/** Generates a markdown link. */
+	static String link(String text, String url) {
 		return "[" + text + "](" + url + ")";
 	}
 
-	public static String image(String altText, String url) {
+	/** Generates a markdown image. */
+	static String image(String altText, String url) {
 		return "!" + link(altText, url);
 	}
 
 	/** Generates shields using <a href="http://shields.io/">shields.io</a>. */
-	public static String shield(String altText, String subject, String status, String color) {
+	static String shield(String altText, String subject, String status, String color) {
 		return image(altText, "https://img.shields.io/badge/" + shieldEscape(subject) + "-" + shieldEscape(status) + "-" + shieldEscape(color) + ".svg");
 	}
 
@@ -60,7 +67,7 @@ public class FreshMark implements Compiler {
 	}
 
 	/** Replaces everything between the  */
-	public static String prefixDelimReplacement(String input, String prefix, String delim, String replacement) {
+	static String prefixDelimReplacement(String input, String prefix, String delim, String replacement) {
 		StringBuilder builder = new StringBuilder(input.length() * 3 / 2);
 
 		int lastElement = 0;
@@ -74,5 +81,22 @@ public class FreshMark implements Compiler {
 		}
 		builder.append(input.substring(lastElement));
 		return builder.toString();
+	}
+
+	private static final Pattern TEMPLATE = Pattern.compile("(.*?)\\{\\{(.*?)\\}\\}", Pattern.DOTALL);
+
+	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
+	static String template(String input, Function<String, String> keyToValue) {
+		Matcher matcher = TEMPLATE.matcher(input);
+		StringBuilder result = new StringBuilder(input.length() * 3 / 2);
+
+		int lastElement = 0;
+		while (matcher.find()) {
+			result.append(matcher.group(1));
+			result.append(keyToValue.apply(matcher.group(2)));
+			lastElement = matcher.end();
+		}
+		result.append(input.substring(lastElement));
+		return result.toString();
 	}
 }
