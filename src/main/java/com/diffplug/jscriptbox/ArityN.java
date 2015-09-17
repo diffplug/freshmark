@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.scriptbox;
+package com.diffplug.jscriptbox;
 
 /**
  * We'd like to pass lambdas to {@link ScriptBox} through a fluent API,

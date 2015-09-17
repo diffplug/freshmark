@@ -25,9 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.diffplug.common.base.Errors;
-import com.diffplug.scriptbox.Language;
-import com.diffplug.scriptbox.ScriptBox;
-import com.diffplug.scriptbox.TypedScriptEngine;
+import com.diffplug.jscriptbox.Language;
+import com.diffplug.jscriptbox.ScriptBox;
+import com.diffplug.jscriptbox.TypedScriptEngine;
 
 public class FreshMark implements Compiler {
 	static final Parser parser = new Parser("freshmark");
@@ -79,10 +79,10 @@ public class FreshMark implements Compiler {
 				}
 			}
 			return parser.prefix + " " + section + "\n" +
-			program +
-			parser.postfix +
-			compiled +
-			parser.prefix + " /" + section + " " + parser.postfix;
+					program +
+					parser.postfix +
+					compiled +
+					parser.prefix + " /" + section + " " + parser.postfix;
 		});
 	}
 
@@ -103,8 +103,8 @@ public class FreshMark implements Compiler {
 
 	private static String shieldEscape(String raw) {
 		return Errors.rethrow().get(() -> URLEncoder.encode(
-				raw.replace("_", "__").replace("-", "--").replace(" ", "_")
-				, StandardCharsets.UTF_8.name()));
+				raw.replace("_", "__").replace("-", "--").replace(" ", "_"),
+				StandardCharsets.UTF_8.name()));
 	}
 
 	/** Replaces everything between the  */

@@ -24,7 +24,8 @@ import javax.script.ScriptException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.scriptbox.ScriptBox;
+import com.diffplug.jscriptbox.Language;
+import com.diffplug.jscriptbox.ScriptBox;
 
 public class ScriptBoxNashornTest {
 	@Test

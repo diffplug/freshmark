@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.scriptbox;
+package com.diffplug.jscriptbox;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import com.diffplug.scriptbox.ArityN.*;
+import com.diffplug.jscriptbox.ArityN.*;
 
 /**
  * When exposing a scripting API, you want to expose
