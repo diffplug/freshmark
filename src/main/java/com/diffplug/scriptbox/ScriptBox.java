@@ -24,10 +24,11 @@ import javax.script.ScriptException;
 import com.diffplug.scriptbox.ArityN.*;
 
 /**
- * When exposing a scripting API, you might want to
- * 
- * 
- * @author ntwigg
+ * When exposing a scripting API, you want to expose
+ * a set of objects and functions to the client code.
+ * <p>
+ * ScriptBox makes it easy to expose both objects and
+ * functions to client code in a language-agnostic way.
  */
 public class ScriptBox {
 	private Map<String, Object> names = new HashMap<>();

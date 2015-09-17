@@ -16,12 +16,13 @@
 package com.diffplug.scriptbox;
 
 /**
- * Turns out that if you just give an `@FunctionalInterface`
- * to Nashorn, it will call the method correctly.
+ * We'd like to pass lambdas to {@link ScriptBox} through a fluent API,
+ * which means that we need to describe the function signature
+ * in the method name.
  * <p>
- * In order to make it easy to concisely specify functions, here
- * they are with consistent naming conventions, for arity 0 to 4,
- * with and without return values.
+ * In order to make this concise, here are functional interfaces
+ * with consistent naming conventions, for arity 0 to 4, with and
+ * without return values.
  */
 public final class ArityN {
 	private ArityN() {}
