@@ -15,13 +15,15 @@
  */
 package com.diffplug.freshmark;
 
-/** Generates shields using <a href="http://shields.io/">shields.io</a>. */
-public class Shields {
-	public static String url(String subject, String status, String color) {
-		return "https://img.shields.io/badge/" + escape(subject) + "-" + escape(status) + "-" + escape(color) + ".svg";
-	}
+import org.junit.Assert;
+import org.junit.Test;
 
-	private static String escape(String raw) {
-		return raw.replace("_", "__").replace("-", "--").replace(" ", "_");
+public class FreshMarkTest {
+	@Test
+	public void testPrefixDelimReplacement() {
+		String before = TestResource.getTestResource("javadoc_before.txt");
+		String after = TestResource.getTestResource("javadoc_after.txt");
+		String afterActual = FreshMark.prefixDelimReplacement(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
+		Assert.assertEquals(after, afterActual);
 	}
 }
