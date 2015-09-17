@@ -15,24 +15,22 @@
  */
 package com.diffplug.scriptbox;
 
-import static com.diffplug.scriptbox.ArityN.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import com.diffplug.scriptbox.ArityN.*;
+
 /**
- * Harness for setting up a JavaScript engine which
- * has had all of the following variables setup.
+ * When exposing a scripting API, you might want to
+ * 
  * 
  * @author ntwigg
  */
 public class ScriptBox {
-	private Map<String, Object> map = new HashMap<>();
+	private Map<String, Object> names = new HashMap<>();
 
 	protected ScriptBox() {}
 
@@ -42,7 +40,7 @@ public class ScriptBox {
 	}
 
 	/** Sets a name in the script to be a value or a function. */
-	public NameSetter setName(String name) {
+	public NameSetter set(String name) {
 		return new NameSetter(name);
 	}
 
@@ -64,7 +62,7 @@ public class ScriptBox {
 		}
 
 		public ScriptBox toValue(Object value) {
-			map.put(name, value);
+			names.put(name, value);
 			return ScriptBox.this;
 		}
 
@@ -83,34 +81,13 @@ public class ScriptBox {
 		// @formatter:on
 	}
 
-	protected String mapInitScript(String mapName) {
-		StringBuilder builder = new StringBuilder();
-		map.entrySet().forEach(entry -> {
-			builder.append("var ");
-			builder.append(entry.getKey());
-			builder.append("=");
-			builder.append(mapName);
-			builder.append(".");
-			builder.append(entry.getKey());
-			builder.append(";\n");
-		});
-		return builder.toString();
-	}
-
 	/** Returns a ScriptEngine with the stuff above. */
-	public ScriptEngine build() throws ScriptException {
-		ScriptEngine jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
-		ScriptContext context = jsEngine.getContext();
-
-		String mapName = "abcd";
-		context.setAttribute(mapName, map, ScriptContext.ENGINE_SCOPE);
-		jsEngine.eval(mapInitScript(mapName));
-
-		return jsEngine;
+	public ScriptEngine build(Language language) throws ScriptException {
+		return language.initializeEngine(names);
 	}
 
 	/** Returns a {@link TypedScriptEngine} with the stuff above. */
-	public TypedScriptEngine buildTyped() throws ScriptException {
-		return new TypedScriptEngine(build());
+	public TypedScriptEngine buildTyped(Language language) throws ScriptException {
+		return new TypedScriptEngine(build(language));
 	}
 }

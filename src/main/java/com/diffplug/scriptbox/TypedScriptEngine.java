@@ -21,7 +21,7 @@ import java.util.Optional;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-/** Wraps up a ScriptEngine in a null-checking and type-checking API. */
+/** Wraps up a ScriptEngine with a null-checking and type-checking API. */
 public class TypedScriptEngine {
 	private final ScriptEngine scriptEngine;
 

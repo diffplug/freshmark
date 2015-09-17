@@ -29,7 +29,7 @@ import com.diffplug.scriptbox.ScriptBox;
 public class ScriptBoxNashornTest {
 	@Test
 	public void testBasicExpressions() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build();
+		ScriptEngine engine = ScriptBox.create().build(Language.nashorn());
 		Assert.assertEquals("abc", engine.eval("'abc'"));
 		Assert.assertEquals(123, engine.eval("123"));
 		Assert.assertEquals(123.5, engine.eval("123.5"));
@@ -37,7 +37,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testBasicScript() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build();
+		ScriptEngine engine = ScriptBox.create().build(Language.nashorn());
 		engine.eval("var txt = 'abc';" +
 				"var int = 123;" +
 				"var float = 123.5;");
@@ -53,8 +53,8 @@ public class ScriptBoxNashornTest {
 	public void testVoid0() throws ScriptException {
 		AtomicBoolean wasRun = new AtomicBoolean(false);
 		ScriptEngine engine = ScriptBox.create()
-				.setName("void0").toVoid0(() -> wasRun.set(true))
-				.build();
+				.set("void0").toVoid0(() -> wasRun.set(true))
+				.build(Language.nashorn());
 		engine.eval("void0()");
 		Assert.assertEquals(true, wasRun.get());
 	}
@@ -63,8 +63,8 @@ public class ScriptBoxNashornTest {
 	public void testVoid1() throws ScriptException {
 		AtomicReference<String> arg1 = new AtomicReference<>();
 		ScriptEngine engine = ScriptBox.create()
-				.setName("void1").toVoid1(arg1::set)
-				.build();
+				.set("void1").toVoid1(arg1::set)
+				.build(Language.nashorn());
 		engine.eval("void1('it lives!')");
 		Assert.assertEquals("it lives!", arg1.get());
 	}
@@ -74,11 +74,11 @@ public class ScriptBoxNashornTest {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		ScriptEngine engine = ScriptBox.create()
-				.setName("void2").toVoid2((a, b) -> {
+				.set("void2").toVoid2((a, b) -> {
 					arg1.set(a);
 					arg2.set(b);
 				})
-				.build();
+				.build(Language.nashorn());
 		engine.eval("void2('a', 'b')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -90,12 +90,12 @@ public class ScriptBoxNashornTest {
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		ScriptEngine engine = ScriptBox.create()
-				.setName("void3").toVoid3((a, b, c) -> {
+				.set("void3").toVoid3((a, b, c) -> {
 					arg1.set(a);
 					arg2.set(b);
 					arg3.set(c);
 				})
-				.build();
+				.build(Language.nashorn());
 		engine.eval("void3('a', 'b', 'c')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -109,13 +109,13 @@ public class ScriptBoxNashornTest {
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		AtomicReference<Object> arg4 = new AtomicReference<>();
 		ScriptEngine engine = ScriptBox.create()
-				.setName("void4").toVoid4((a, b, c, d) -> {
+				.set("void4").toVoid4((a, b, c, d) -> {
 					arg1.set(a);
 					arg2.set(b);
 					arg3.set(c);
 					arg4.set(d);
 				})
-				.build();
+				.build(Language.nashorn());
 		engine.eval("void4('a', 'b', 'c', 'd')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -129,16 +129,16 @@ public class ScriptBoxNashornTest {
 	@Test
 	public void testFunc0() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
-				.setName("func0").toFunc0(() -> "wassup")
-				.build();
+				.set("func0").toFunc0(() -> "wassup")
+				.build(Language.nashorn());
 		Assert.assertEquals("wassup", engine.eval("func0()"));
 	}
 
 	@Test
 	public void testFunc1() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
-				.setName("func1").toFunc1(a -> a)
-				.build();
+				.set("func1").toFunc1(a -> a)
+				.build(Language.nashorn());
 		Assert.assertEquals("identity", engine.eval("func1('identity')"));
 		Assert.assertEquals(4, engine.eval("func1(4)"));
 		Assert.assertEquals(4.5, engine.eval("func1(4.5)"));
@@ -147,24 +147,24 @@ public class ScriptBoxNashornTest {
 	@Test
 	public void testFunc2() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
-				.setName("func2").toFunc2((String a, String b) -> a + b)
-				.build();
+				.set("func2").toFunc2((String a, String b) -> a + b)
+				.build(Language.nashorn());
 		Assert.assertEquals("ab", engine.eval("func2('a', 'b')"));
 	}
 
 	@Test
 	public void testFunc3() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
-				.setName("func3").toFunc3((String a, String b, String c) -> a + b + c)
-				.build();
+				.set("func3").toFunc3((String a, String b, String c) -> a + b + c)
+				.build(Language.nashorn());
 		Assert.assertEquals("abc", engine.eval("func3('a', 'b', 'c')"));
 	}
 
 	@Test
 	public void testFunc4() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
-				.setName("func4").toFunc4((String a, String b, String c, String d) -> a + b + c + d)
-				.build();
+				.set("func4").toFunc4((String a, String b, String c, String d) -> a + b + c + d)
+				.build(Language.nashorn());
 		Assert.assertEquals("abcd", engine.eval("func4('a', 'b', 'c', 'd')"));
 	}
 }
