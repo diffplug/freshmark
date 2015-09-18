@@ -78,7 +78,7 @@ public abstract class CommentScript {
 	final Parser parser;
 
 	/** Compiles a single section/script/input combo into the appropriate output. */
-	final Parser.Compiler compiler = new Parser.Compiler() {
+	final Parser.SectionCompiler compiler = new Parser.SectionCompiler() {
 		@Override
 		public String compileSection(String section, String script, String input) {
 			return Errors.rethrow().get(() -> {
@@ -90,20 +90,7 @@ public abstract class CommentScript {
 				engine.put("input", input);
 				// evaluate the script and get the result
 				engine.eval(templatedProgram);
-				String compiled = Check.cast(engine.get("output"), String.class);
-				// make sure that the compiled output starts and ends with a newline,
-				// so that the tags stay separated separated nicely
-				if (!compiled.startsWith("\n")) {
-					compiled = "\n" + compiled;
-				}
-				if (!compiled.endsWith("\n")) {
-					compiled = compiled + "\n";
-				}
-				return parser.intron + " " + section + "\n" +
-						script +
-						parser.exon +
-						compiled +
-						parser.intron + " /" + section + " " + parser.exon;
+				return Check.cast(engine.get("output"), String.class);
 			});
 		}
 	};

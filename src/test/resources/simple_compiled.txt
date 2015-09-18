@@ -1,0 +1,11 @@
+Some stuff
+Nothing special
+<!---freshmark simple
+output = 'BLOOPEY\n' + input + 'DOOP\n';
+-->
+section: simple
+program: output = 'BLOOPEY\n' + input + 'DOOP\n';
+input: 
+Does this work?
+<!---freshmark /simple -->
+Why yes!  Yes it does.

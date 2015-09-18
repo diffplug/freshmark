@@ -20,8 +20,6 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.common.base.StringPrinter;
-
 public class ParserTest {
 	static final Parser freshmarkParser = new FreshMark(null, null).parser;
 
@@ -58,15 +56,7 @@ public class ParserTest {
 
 	@Test
 	public void testCompileWiring() {
-		testCaseCompileSuccess("simple.txt", StringPrinter.buildStringFromLines(
-				"Some stuff",
-				"Nothing special",
-				"section: simple",
-				"program: output = 'BLOOPEY\\n' + input + 'DOOP\\n';",
-				"input: ",
-				"Does this work?",
-				"",
-				"Why yes!  Yes it does."));
+		testCaseCompileSuccess("simple.txt", TestResource.getTestResource("simple_compiled.txt"));
 	}
 
 	static void testCaseCompileSuccess(String file, String expected) {
@@ -90,7 +80,7 @@ public class ParserTest {
 
 	@Test
 	public void testCompileNoProgram() {
-		testCaseCompileError("noprogram.txt", "Error on line 3: Section doesn't contain a program.");
+		testCaseCompileError("noprogram.txt", "Error on line 3: Section doesn't contain a script.");
 	}
 
 	static void testCaseCompileError(String file, String expected) {

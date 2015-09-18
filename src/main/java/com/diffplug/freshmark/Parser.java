@@ -33,28 +33,53 @@ class Parser {
 	/**
 	 * Given an input string, parses out the body sections from the tag sections.
 	 * 
-	 * @param input 	the raw input string
+	 * @param rawInput 	the raw input string
 	 * @param body		called for every chunk of text outside a tag
 	 * @param tag		called for every chunk of text inside a tag
 	 */
-	void bodyAndTags(String input, Consumer<String> body, Consumer<String> tag) {
-		Matcher matcher = pattern.matcher(input);
+	protected void bodyAndTags(String rawInput, Consumer<String> body, Consumer<String> tag) {
+		Matcher matcher = pattern.matcher(rawInput);
 		int last = 0;
 		while (matcher.find()) {
 			if (matcher.start() > last) {
-				body.accept(input.substring(last, matcher.start()));
+				body.accept(rawInput.substring(last, matcher.start()));
 			}
 			tag.accept(matcher.group(1));
 			last = matcher.end();
 		}
-		if (last < input.length()) {
-			body.accept(input.substring(last));
+		if (last < rawInput.length()) {
+			body.accept(rawInput.substring(last));
 		}
+	}
+
+	/**
+	 * Reassembles a section/script/output chunk back into
+	 * the full file.
+	 * 
+	 * @param section
+	 * @param script
+	 * @param output
+	 * @return
+	 */
+	protected String reassemble(String section, String script, String output) {
+		// make sure that the compiled output starts and ends with a newline,
+		// so that the tags stay separated separated nicely
+		if (!output.startsWith("\n")) {
+			output = "\n" + output;
+		}
+		if (!output.endsWith("\n")) {
+			output = output + "\n";
+		}
+		return intron + " " + section + "\n" +
+				script +
+				exon +
+				output +
+				intron + " /" + section + " " + exon;
 	}
 
 	/** Interface which can compile a single section of a FreshMark document. */
 	@FunctionalInterface
-	interface Compiler {
+	public interface SectionCompiler {
 		String compileSection(String section, String program, String in);
 	}
 
@@ -65,7 +90,7 @@ class Parser {
 	 * @param compiler	used to compile each section
 	 * @return 			the compiled output string
 	 */
-	String compile(String fullInput, Compiler compiler) {
+	public String compile(String fullInput, SectionCompiler compiler) {
 		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);
 		/** Associates errors with the part of the input that caused it. */
 		class ErrorFormatter {
@@ -102,37 +127,37 @@ class Parser {
 		class State {
 			/** The section for which we're looking for a close tag. */
 			String section;
-			/** The program for that section. */
-			String program;
-			/** The raw input which will be passed to the program. */
+			/** The script for that section. */
+			String script;
+			/** The raw input which will be passed to the script. */
 			String input;
 
 			void body(String body) {
 				assert(input == null);
 				if (section == null) {
-					assert(program == null);
+					assert(script == null);
 					result.append(body);
 				} else {
-					assert(program != null);
+					assert(script != null);
 					input = body;
 				}
 			}
 
 			void tag(String tag) {
 				if (section == null) {
-					assert(program == null);
+					assert(script == null);
 					assert(input == null);
 					// we were looking for an open tag, and now we've got one
 					int firstLine = tag.indexOf('\n');
 					if (firstLine < 0 || tag.length() <= firstLine) {
-						throw new IllegalArgumentException("Section doesn't contain a program.");
+						throw new IllegalArgumentException("Section doesn't contain a script.");
 					}
 					// the section name is the first line (trimmed)
 					section = tag.substring(0, firstLine).trim();
-					// the program is the second line
-					program = tag.substring(firstLine + 1);
+					// the script is the second line
+					script = tag.substring(firstLine + 1);
 				} else {
-					assert(program != null);
+					assert(script != null);
 					assert(input != null);
 					// we were looking for a close tag
 					String closing = tag.trim();
@@ -141,11 +166,12 @@ class Parser {
 						throw new IllegalArgumentException("Expecting '/" + section + "'");
 					}
 					// and we found one!  compile it and accumulate the result
-					String chunk = compiler.compileSection(section, program, input);
-					result.append(chunk);
+					String compiled = compiler.compileSection(section, script, input);
+					String reassembled = reassemble(section, script, compiled);
+					result.append(reassembled);
 					// wipe the state
 					section = null;
-					program = null;
+					script = null;
 					input = null;
 				}
 			}

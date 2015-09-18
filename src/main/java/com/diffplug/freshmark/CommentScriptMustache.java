@@ -57,13 +57,15 @@ public abstract class CommentScriptMustache extends CommentScript {
 		super(intron, exon, regex);
 	}
 
+	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
 	protected String template(String section, String script) {
-		return mustacheTemplate(script, key -> keyToValue(section, script));
+		return mustacheTemplate(script, key -> keyToValue(section, key));
 	}
 
+	/** For the given section, return the templated value for the given key. */
 	protected abstract String keyToValue(String section, String script);
 
-	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
+	/** Mustache templating. */
 	static String mustacheTemplate(String input, Function<String, String> keyToValue) {
 		Matcher matcher = MUSTACHE_PATTERN.matcher(input);
 		StringBuilder result = new StringBuilder(input.length() * 3 / 2);
