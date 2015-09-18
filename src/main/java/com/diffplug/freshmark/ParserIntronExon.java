@@ -18,7 +18,11 @@ package com.diffplug.freshmark;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** A format defined by "tag start" and "tag end" chunks of text. */
+/**
+ * A parser defined by "intron" and "extron" chunks of text.
+ * 
+ * @see {@link FreshMark}
+ */
 public class ParserIntronExon extends Parser {
 	final String intron, exon;
 	final Pattern pattern;
@@ -76,23 +80,23 @@ public class ParserIntronExon extends Parser {
 	 * 
 	 * @param section
 	 * @param script
-	 * @param output
+	 * @param body
 	 * @return
 	 */
 	@Override
-	protected String reassemble(String section, String script, String output) {
+	protected String reassemble(String section, String script, String body) {
 		// make sure that the compiled output starts and ends with a newline,
 		// so that the tags stay separated separated nicely
-		if (!output.startsWith("\n")) {
-			output = "\n" + output;
+		if (!body.startsWith("\n")) {
+			body = "\n" + body;
 		}
-		if (!output.endsWith("\n")) {
-			output = output + "\n";
+		if (!body.endsWith("\n")) {
+			body = body + "\n";
 		}
 		return intron + " " + section + "\n" +
 				script +
 				exon +
-				output +
+				body +
 				intron + " /" + section + " " + exon;
 	}
 }

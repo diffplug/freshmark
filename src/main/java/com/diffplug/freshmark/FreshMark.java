@@ -30,7 +30,10 @@ import com.diffplug.common.base.Errors;
 import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
 
-/** The default implementation. */
+/**
+ * FreshMark is designed to generate and modify
+ * markdown using javascript.
+ */
 public class FreshMark extends CommentScript {
 	private static final String INTRON = "<!---freshmark";
 	private static final String EXON = "-->";
@@ -70,17 +73,17 @@ public class FreshMark extends CommentScript {
 	// built-in functions //
 	////////////////////////
 	/** Generates a markdown link. */
-	static String link(String text, String url) {
+	public static String link(String text, String url) {
 		return "[" + text + "](" + url + ")";
 	}
 
 	/** Generates a markdown image. */
-	static String image(String altText, String url) {
+	public static String image(String altText, String url) {
 		return "!" + link(altText, url);
 	}
 
 	/** Generates shields using <a href="http://shields.io/">shields.io</a>. */
-	static String shield(String altText, String subject, String status, String color) {
+	public static String shield(String altText, String subject, String status, String color) {
 		return image(altText, "https://img.shields.io/badge/" + shieldEscape(subject) + "-" + shieldEscape(status) + "-" + shieldEscape(color) + ".svg");
 	}
 
@@ -91,7 +94,7 @@ public class FreshMark extends CommentScript {
 	}
 
 	/** Replaces after prefix and before delimiter with replacement.  */
-	static String prefixDelimiterReplace(String input, String prefix, String delimiter, String replacement) {
+	public static String prefixDelimiterReplace(String input, String prefix, String delimiter, String replacement) {
 		StringBuilder builder = new StringBuilder(input.length() * 3 / 2);
 		int lastElement = 0;
 		Pattern pattern = Pattern.compile("(.*?" + Pattern.quote(prefix) + ")(.*?)(" + Pattern.quote(delimiter) + ")", Pattern.DOTALL);

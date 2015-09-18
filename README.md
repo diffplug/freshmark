@@ -22,7 +22,7 @@ output = [
 [![Travis CI](https://travis-ci.org/diffplug/durian.svg?branch=master)](https://travis-ci.org/diffplug/durian)
 <!---freshmark /shields -->
 
-Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript programs into the comments of your Markdown, which statically generate the rest of the document.  By running these programs as part of your build script, your project's documentation will always stay up-to-date.
+Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
 
 Here is what the code looks like for the shields at the top of this document:
 
@@ -51,20 +51,20 @@ To run FreshMark on some text, call [FreshMark.compile()](https://diffplug.githu
 
 ## How it works
 
-FreshMark has three pieces, `SECTION`, `PROGRAM`, and `INPUT`.  They are parsed as shown below:
+FreshMark has three pieces, `SECTION`, `SCRIPT`, and `BODY`.  They are parsed as shown below:
 
 ```javascript
 <!---freshmark SECTION (identifier)
-PROGRAM (javascript)
+SCRIPT (javascript)
 -->
-INPUT (markdown)
+BODY (markdown)
 <!---freshmark /SECTION -->
 ```
 
-When `PROGRAM` is run, there are two magic variables:
+When `SCRIPT` is run, there are two magic variables:
 
-* `input` - This is everything inside of INPUT (guaranteed to have only unix newlines at runtime)
-* `output` - The script must assign to this variable.  FreshMark will generate a new string where the `INPUT` section has been replaced with this value.
+* `input` - This is everything inside of BODY (guaranteed to have only unix newlines at runtime)
+* `output` - The script must assign to this variable.  FreshMark will generate a new string where the `BODY` section has been replaced with this value.
 
 Only four functions are provided:
 
@@ -79,8 +79,8 @@ It's full ECMAScript 5.1, so you can define any other functions you like, but th
 
 When you run FreshMark, you can supply it with a map of key-value pairs using the command line or via a properties file.  If you're running FreshMark from a build system plugin such as Gradle, then all of your project's metadata will automatically be supplied.  These key-value pairs are used in the following way:
 
-* Before `PROGRAM` is executed, any `{{key}}` templates will be substituted with their corresponding value.
-* When `PROGRAM` is executed, all of these key-value pairs are available as variables.
+* Before `SCRIPT` is executed, any `{{key}}` templates will be substituted with their corresponding value.
+* When `SCRIPT` is executed, all of these key-value pairs are available as variables.
 
 ## How to run it
 

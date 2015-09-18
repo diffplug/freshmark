@@ -17,7 +17,14 @@ package com.diffplug.freshmark;
 
 import java.util.function.Consumer;
 
-/** A format defined by "tag start" and "tag end" chunks of text. */
+/**
+ * Parser splits text into tags and body sections, passes
+ * pairs of matching sections to a {@link SectionCompiler}, then
+ * combines that output with the original document to generate
+ * the final output.
+ * 
+ * @see {@link ParserIntronExtron}
+ */
 public abstract class Parser {
 	/** Interface which can compile a single section of a FreshMark document. */
 	@FunctionalInterface
@@ -36,13 +43,13 @@ public abstract class Parser {
 	}
 
 	/**
-	 * Given an input string, parses out the body sections from the tag sections.
+	 * Given an input string, parses out the body sections from the tags section.
 	 * 
-	 * @param rawInput 	the raw input string
+	 * @param fullInput	the raw input string
 	 * @param body		called for every chunk of text outside a tag
 	 * @param tag		called for every chunk of text inside a tag
 	 */
-	protected abstract void bodyAndTags(String rawInput, ChunkHandler body, ChunkHandler tag);
+	protected abstract void bodyAndTags(String fullInput, ChunkHandler body, ChunkHandler tag);
 
 	/**
 	 * Reassembles a section/script/output chunk back into

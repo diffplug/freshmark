@@ -47,8 +47,8 @@ import com.diffplug.jscriptbox.Check;
  * you must provide:
  * <ul>
  * <li>A {@link Parser} to split the comment text from the body text.</li>
- * <li>{@link #keyToValue} - defines how template keys in the script string are transformed into values</li>
- * <li>{@link #setupScriptEngine} - initializes any functions or variables which should be available to the script</li>
+ * <li>{@link #keyToValue} - defines how template keys in the script string are transformed into values.</li>
+ * <li>{@link #setupScriptEngine} - initializes any functions or variables which should be available to the script.</li>
  * </ul>
  * @see FreshMark
  */
