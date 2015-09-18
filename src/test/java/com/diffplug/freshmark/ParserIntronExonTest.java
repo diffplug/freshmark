@@ -21,7 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ParserIntronExonTest {
-	static final Parser freshmarkParser = new FreshMark(null, null).parser;
+	static final Parser freshmarkParser = FreshMark.PARSER;
 
 	@Test
 	public void testBodyAndTags() {

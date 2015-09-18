@@ -44,7 +44,7 @@ public class FreshMarkTest {
 		props.put("name", "durian");
 		props.put("org", "diffplug");
 		List<String> warnings = new ArrayList<>();
-		CommentScript freshmark = new FreshMark(props, warnings::add);
+		CommentScript freshmark = FreshMark.create(props, warnings::add);
 		String afterActual = freshmark.compile(before);
 		Assert.assertEquals(after, afterActual);
 		Assert.assertTrue(warnings.isEmpty());

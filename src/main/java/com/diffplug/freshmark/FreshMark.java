@@ -31,32 +31,25 @@ import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
 
 /** The default implementation. */
-public class FreshMark extends CommentScriptMustache {
+public class FreshMark {
 	private static final String INTRON = "<!---freshmark";
 	private static final String EXON = "-->";
+	static final Parser PARSER = new ParserIntronExon(INTRON, EXON);
 
 	private final Map<String, ?> properties;
 	private final Consumer<String> warningStream;
 
-	public FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
-		super(new ParserIntronExon(INTRON, EXON));
+	public static CommentScript create(Map<String, ?> properties, Consumer<String> warningStream) {
+		FreshMark freshMark = new FreshMark(properties, warningStream);
+		return new CommentScript(PARSER, CommentScriptMustache.keyToValue(freshMark::keyToValue), freshMark::createScriptEngine);
+	}
+
+	protected FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
 		this.properties = properties;
 		this.warningStream = warningStream;
 	}
 
-	@Override
-	protected ScriptEngine setupScriptEngine(String section) throws ScriptException {
-		return JScriptBox.create()
-				.setAll(properties)
-				.set("link").toFunc2(FreshMark::link)
-				.set("image").toFunc2(FreshMark::image)
-				.set("shield").toFunc4(FreshMark::shield)
-				.set("prefixDelimiterReplace").toFunc4(FreshMark::prefixDelimiterReplace)
-				.build(Language.javascript());
-	}
-
-	@Override
-	protected String keyToValue(String section, String key) {
+	private String keyToValue(String key) {
 		Object value = properties.get(key);
 		if (value != null) {
 			return Objects.toString(value);
@@ -64,6 +57,16 @@ public class FreshMark extends CommentScriptMustache {
 			warningStream.accept("Unknown key '" + key + "'");
 			return key + "=UNKNOWN";
 		}
+	}
+
+	private ScriptEngine createScriptEngine(String section) throws ScriptException {
+		return JScriptBox.create()
+				.setAll(properties)
+				.set("link").toFunc2(FreshMark::link)
+				.set("image").toFunc2(FreshMark::image)
+				.set("shield").toFunc4(FreshMark::shield)
+				.set("prefixDelimiterReplace").toFunc4(FreshMark::prefixDelimiterReplace)
+				.build(Language.javascript());
 	}
 
 	////////////////////////

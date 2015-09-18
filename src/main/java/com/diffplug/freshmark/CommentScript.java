@@ -29,68 +29,70 @@ import com.diffplug.jscriptbox.Check;
  * A CommentScript has the following form:
  * <pre>
  * {@code
- * [INTRON] sectionName
+ * COMMENT_BEGIN sectionName
  * script
  * script
- * [EXON]
- * lastProgramExecutionResult
- * lastProgramExecutionResult
- * lastProgramExecutionResult
- * [INTRON] /sectionName [EXON]
+ * COMMENT_END
+ * body
+ * body
+ * body
+ * COMMENT_BEGIN /sectionName COMMENT_END
  * }
  * </pre>
  * This class is a minimal implementation of a CommentScript.  To create a CommentScript,
  * you must provide:
  * <ul>
- * <li>The intron and exon strings in the constructor.</li>
- * <li>{@link #keyToValue} - defines how template keys in the script string are transformed into values</li>
- * <li>{@link #setupScriptEngine} - initializes any functions or variables which should be available to the script</li>
+ * <li>A {@link Parser} which can separate CommentScript blocks from the underlying document.</li>
+ * <li>A {@code Function<String, String>} which transforms the script into the body.</li>
  * </ul>
  * See {@link FreshMark} for a sample implementation.
  */
-public abstract class CommentScript {
-	/**
-	 * Creates a CommentScript using the given parser to
-	 * delineate and combine comment blocks.
-	 */
-	protected CommentScript(Parser parser) {
-		this.parser = parser;
+public class CommentScript implements Parser.SectionCompiler {
+	@FunctionalInterface
+	public interface SectionFunction<T, R> {
+		String apply(String section, String script) throws ScriptException;
 	}
 
-	/** Parser which splits up the raw document into structured tags which get passed to the compiler. */
-	final Parser parser;
+	public class Builder {
+		private final Parser parser;
+		private SectionFunctino
+
+		[rovate]
+	}
+	
+
+	
+	private Templater templater;
+	private ScriptCreator scriptCreator;
+
+	private final Parser parser;
+	private final Templater templater;
+	private final ScriptCreator scriptCreator;
+
+	protected CommentScript(Parser parser, Templater template, ScriptCreator scriptCreator) {
+		this.parser = parser;
+		this.templater = template;
+		this.scriptCreator = scriptCreator;
+	}
 
 	/** Compiles a single section/script/input combo into the appropriate output. */
-	final ParserIntronExon.SectionCompiler compiler = new ParserIntronExon.SectionCompiler() {
-		@Override
-		public String compileSection(String section, String script, String input) {
-			return Errors.rethrow().get(() -> {
-				ScriptEngine engine = setupScriptEngine(section);
+	@Override
+	public String compileSection(String section, String script, String input) {
+		return Errors.rethrow().get(() -> {
+			ScriptEngine engine = scriptCreator.createScriptEngine(section);
 
-				// apply the templating engine to the script
-				String templatedProgram = template(section, script);
-				// populate the input data
-				engine.put("input", input);
-				// evaluate the script and get the result
-				engine.eval(templatedProgram);
-				return Check.cast(engine.get("output"), String.class);
-			});
-		}
-	};
+			// apply the templating engine to the script
+			String templatedProgram = templater.template(section, script);
+			// populate the input data
+			engine.put("input", input);
+			// evaluate the script and get the result
+			engine.eval(templatedProgram);
+			return Check.cast(engine.get("output"), String.class);
+		});
+	}
 
 	/** Compiles the given input string. Input must contain only unix newlines, output is guaranteed to be the same. */
 	public String compile(String input) {
-		return parser.compile(input, compiler);
+		return parser.compile(input, this);
 	}
-
-	/** For the given section, perform templating on the given script. */
-	protected abstract String template(String section, String script);
-
-	/**
-	 * For the given section, setup any built-in functions and variables.
-	 * <p>
-	 * The {@code input} value will be set for you, and the {@code output} value will
-	 * be extracted for you, but you must do everything else.
-	 */
-	protected abstract ScriptEngine setupScriptEngine(String section) throws ScriptException;
 }

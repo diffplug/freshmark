@@ -46,19 +46,24 @@ import java.util.regex.Pattern;
  * </ul>
  * See {@link FreshMark} for a sample implementation.
  */
-public abstract class CommentScriptMustache extends CommentScript {
-	/** @see CommentScript#CommentScript(String, String) */
-	protected CommentScriptMustache(Parser parser) {
-		super(parser);
+public abstract class CommentScriptMustache implements CommentScript.Templater {
+	public static CommentScriptMustache keyToValue(Function<String, String> function) {
+		return new CommentScriptMustache() {
+			@Override
+			protected String keyToValue(String section, String key) {
+				return function.apply(key);
+			}
+		};
 	}
 
 	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
-	protected String template(String section, String script) {
+	@Override
+	public String template(String section, String script) {
 		return mustacheTemplate(script, key -> keyToValue(section, key));
 	}
 
 	/** For the given section, return the templated value for the given key. */
-	protected abstract String keyToValue(String section, String script);
+	protected abstract String keyToValue(String section, String key);
 
 	/** Mustache templating. */
 	static String mustacheTemplate(String input, Function<String, String> keyToValue) {
