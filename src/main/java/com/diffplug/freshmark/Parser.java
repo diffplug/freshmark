@@ -19,13 +19,14 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
+/** A format defined by "tag start" and "tag end" chunks of text. */
+class Parser {
 	final String prefix, postfix;
 	final Pattern pattern;
 
-	public Parser(String name) {
-		prefix = "<!---" + name;
-		postfix = "-->";
+	Parser(String prefix, String postfix) {
+		this.prefix = prefix;
+		this.postfix = postfix;
 		pattern = Pattern.compile(prefix + "(.*?)" + postfix, Pattern.DOTALL);
 	}
 
@@ -51,6 +52,12 @@ public class Parser {
 		}
 	}
 
+	/** Interface which can compile a single section of a FreshMark document. */
+	@FunctionalInterface
+	interface Compiler {
+		String compileSection(String section, String program, String in);
+	}
+
 	/**
 	 * Compiles an input string to an output string, using the given compiler to compile each section.
 	 * 
@@ -58,7 +65,7 @@ public class Parser {
 	 * @param compiler	used to compile each section
 	 * @return 			the compiled output string
 	 */
-	public String compile(String fullInput, Compiler compiler) {
+	String compile(String fullInput, Compiler compiler) {
 		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);
 		/** Associates errors with the part of the input that caused it. */
 		class ErrorFormatter {
