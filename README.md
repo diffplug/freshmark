@@ -1,5 +1,7 @@
 # <img align="left" src="durian-rx.png"> DurianRx: Reactive getters, powered by RxJava and ListenableFuture
 
+[![Join the chat at https://gitter.im/diffplug/freshmark](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/diffplug/freshmark?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.durian%3Adurian--rx-blue.svg)](https://bintray.com/diffplug/opensource/durian-rx/view)
 [![Latest version](http://img.shields.io/badge/latest-1.0.1-blue.svg)](https://github.com/diffplug/durian-rx/releases/latest)
 [![Javadoc](http://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/durian-rx/javadoc/1.0.1/)
