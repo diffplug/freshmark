@@ -15,8 +15,6 @@
  */
 package com.diffplug.freshmark;
 
-import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
@@ -115,37 +113,14 @@ public abstract class CommentScript {
 		return parser.compile(input, compiler);
 	}
 
-	/** Performs templating on the script.  Delegates to mustache-style templating through keyToValue by default. */
-	protected String template(String section, String script) {
-		return mustacheTemplate(script, key -> keyToValue(section, key));
-	}
-
-	/** For the given section, return the templated value for the given key. */
-	protected abstract String keyToValue(String section, String key);
+	/** For the given section, perform templating on the given script. */
+	protected abstract String template(String section, String script);
 
 	/**
-	 * For the given section, setup a ScriptEngine appropriately.
+	 * For the given section, setup any built-in functions and variables.
 	 * <p>
 	 * The {@code input} value will be set for you, and the {@code output} value will
 	 * be extracted for you, but you must do everything else.
 	 */
 	protected abstract ScriptEngine setupScriptEngine(String section) throws ScriptException;
-
-	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
-	static String mustacheTemplate(String input, Function<String, String> keyToValue) {
-		Matcher matcher = MUSTACHE_PATTERN.matcher(input);
-		StringBuilder result = new StringBuilder(input.length() * 3 / 2);
-
-		int lastElement = 0;
-		while (matcher.find()) {
-			result.append(matcher.group(1));
-			result.append(keyToValue.apply(matcher.group(2)));
-			lastElement = matcher.end();
-		}
-		result.append(input.substring(lastElement));
-		return result.toString();
-	}
-
-	/** Regex which matches for {@code {{key}}}. */
-	private static final Pattern MUSTACHE_PATTERN = Pattern.compile("(.*?)\\{\\{(.*?)\\}\\}", Pattern.DOTALL);
 }

@@ -31,7 +31,7 @@ import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
 
 /** The defaault implementation. */
-public class FreshMark extends CommentScript {
+public class FreshMark extends CommentScriptMustache {
 	private static final String INTRON = "<!---freshmark";
 	private static final String EXON = "-->";
 
