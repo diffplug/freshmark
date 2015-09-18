@@ -21,7 +21,7 @@ output = [
 Guava has become indispensable for many Java developers.  Because of its wide adoption, it must be conservative regarding its minimum requirements.
 
 <!---freshmark javadoc
-output = prefixDelimReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable)
+output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable)
 -->
 Durian complements Guava with some features which are too spiky for Guava, such as:
 * [One-liner exception handling](test/com/diffplug/common/base/ErrorsExample.java?ts=4) for Java 8 functional interfaces (even with checked exceptions).

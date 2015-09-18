@@ -61,7 +61,7 @@ public class FreshMark implements Compiler {
 					.set("link").toFunc2(FreshMark::link)
 					.set("image").toFunc2(FreshMark::image)
 					.set("shield").toFunc4(FreshMark::shield)
-					.set("prefixDelimReplace").toFunc4(FreshMark::prefixDelimReplace)
+					.set("prefixDelimiterReplace").toFunc4(FreshMark::prefixDelimiterReplace)
 					.buildTyped(Language.nashorn());
 
 			// apply the templating engine to the program
@@ -108,11 +108,11 @@ public class FreshMark implements Compiler {
 	}
 
 	/** Replaces everything between the  */
-	static String prefixDelimReplace(String input, String prefix, String delim, String replacement) {
+	static String prefixDelimiterReplace(String input, String prefix, String delimiter, String replacement) {
 		StringBuilder builder = new StringBuilder(input.length() * 3 / 2);
 
 		int lastElement = 0;
-		Pattern pattern = Pattern.compile("(.*?" + Pattern.quote(prefix) + ")(.*?)(" + Pattern.quote(delim) + ")", Pattern.DOTALL);
+		Pattern pattern = Pattern.compile("(.*?" + Pattern.quote(prefix) + ")(.*?)(" + Pattern.quote(delimiter) + ")", Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(input);
 		while (matcher.find()) {
 			builder.append(matcher.group(1));

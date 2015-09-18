@@ -29,7 +29,7 @@ public class FreshMarkTest {
 	public void testPrefixDelimReplacement() {
 		String before = TestResource.getTestResource("javadoc_before.txt");
 		String after = TestResource.getTestResource("javadoc_after.txt");
-		String afterActual = FreshMark.prefixDelimReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
+		String afterActual = FreshMark.prefixDelimiterReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
 		Assert.assertEquals(after, afterActual);
 	}
 
