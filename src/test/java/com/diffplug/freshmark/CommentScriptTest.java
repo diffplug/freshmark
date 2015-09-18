@@ -20,12 +20,12 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class CommentScriptMustacheTest {
+public class CommentScriptTest {
 	@Test
-	public void testTemplate() {
+	public void testMustacheTemplate() {
 		String before = TestResource.getTestResource("template_before.txt");
 		String after = TestResource.getTestResource("template_after.txt");
-		String afterActual = CommentScriptMustache.mustacheTemplate(before, key -> key.toUpperCase(Locale.US));
+		String afterActual = CommentScript.mustacheTemplate(before, key -> key.toUpperCase(Locale.US));
 		Assert.assertEquals(after, afterActual);
 	}
 }
