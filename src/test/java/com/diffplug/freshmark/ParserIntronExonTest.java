@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ParserTest {
+public class ParserIntronExonTest {
 	static final Parser freshmarkParser = new FreshMark(null, null).parser;
 
 	@Test
@@ -32,15 +32,15 @@ public class ParserTest {
 				"simple.txt",
 				"unclosed.txt",
 				"unclosedthenstuff.txt")
-				.forEach(ParserTest::testCaseBodyAndTags);
+				.forEach(ParserIntronExonTest::testCaseBodyAndTags);
 	}
 
 	static void testCaseBodyAndTags(String file) {
 		String raw = TestResource.getTestResource(file);
 		StringBuilder result = new StringBuilder(raw.length());
-		freshmarkParser.bodyAndTags(raw, body -> {
+		freshmarkParser.bodyAndTags(raw, (startIdx, body) -> {
 			result.append(body);
-		}, tag -> {
+		}, (startIdx, tag) -> {
 			result.append("<!---freshmark");
 			result.append(tag);
 			result.append("-->");

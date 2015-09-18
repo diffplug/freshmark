@@ -15,7 +15,6 @@
  */
 package com.diffplug.freshmark;
 
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,18 +55,18 @@ public class ParserIntronExon extends Parser {
 	 * @param tag		called for every chunk of text inside a tag
 	 */
 	@Override
-	protected void bodyAndTags(String rawInput, Consumer<String> body, Consumer<String> tag) {
+	protected void bodyAndTags(String rawInput, ChunkHandler body, ChunkHandler tag) {
 		Matcher matcher = pattern.matcher(rawInput);
 		int last = 0;
 		while (matcher.find()) {
 			if (matcher.start() > last) {
-				body.accept(rawInput.substring(last, matcher.start()));
+				body.handle(last, rawInput.substring(last, matcher.start()));
 			}
-			tag.accept(matcher.group(1));
+			tag.handle(matcher.start(1), matcher.group(1));
 			last = matcher.end();
 		}
 		if (last < rawInput.length()) {
-			body.accept(rawInput.substring(last));
+			body.handle(last, rawInput.substring(last));
 		}
 	}
 

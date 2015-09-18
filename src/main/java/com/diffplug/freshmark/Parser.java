@@ -19,6 +19,21 @@ import java.util.function.Consumer;
 
 /** A format defined by "tag start" and "tag end" chunks of text. */
 public abstract class Parser {
+	/** Interface which can compile a single section of a FreshMark document. */
+	@FunctionalInterface
+	public interface SectionCompiler {
+		String compileSection(String section, String script, String input);
+	}
+
+	/** Interface for passing a chunk of the document. */
+	@FunctionalInterface
+	protected interface ChunkHandler {
+		/**
+		 * @param startIdxFromRaw 	index of the start of content, relative to the beginning of the raw input
+		 * @param content			the content to be handled
+		 */
+		void handle(int startIdxFromRaw, String content);
+	}
 
 	/**
 	 * Given an input string, parses out the body sections from the tag sections.
@@ -27,7 +42,7 @@ public abstract class Parser {
 	 * @param body		called for every chunk of text outside a tag
 	 * @param tag		called for every chunk of text inside a tag
 	 */
-	protected abstract void bodyAndTags(String rawInput, Consumer<String> body, Consumer<String> tag);
+	protected abstract void bodyAndTags(String rawInput, ChunkHandler body, ChunkHandler tag);
 
 	/**
 	 * Reassembles a section/script/output chunk back into
@@ -40,12 +55,6 @@ public abstract class Parser {
 	 */
 	protected abstract String reassemble(String section, String script, String output);
 
-	/** Interface which can compile a single section of a FreshMark document. */
-	@FunctionalInterface
-	public interface SectionCompiler {
-		String compileSection(String section, String program, String in);
-	}
-
 	/**
 	 * Compiles an input string to an output string, using the given compiler to compile each section.
 	 * 
@@ -56,27 +65,14 @@ public abstract class Parser {
 	public String compile(String fullInput, SectionCompiler compiler) {
 		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);
 		/** Associates errors with the part of the input that caused it. */
+		@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "It's a bug in FindBugs.  TODO: report")
 		class ErrorFormatter {
-			int numReadSoFar = 0;
-
-			Consumer<String> wrap(Consumer<String> action) {
-				return input -> {
+			ChunkHandler wrap(Consumer<String> action) {
+				return (int startIdxFromRaw, String content) -> {
 					try {
-						action.accept(input);
-						String toRead = fullInput.substring(numReadSoFar);
-						if (toRead.startsWith(input)) {
-							// body
-							numReadSoFar += input.length();
-						} else {
-							// tag
-							// TODO: we don't have enough information to do line-based
-							// error checking, so it's just turned off entirely
-							//String tag = intron + input + exon;
-							//assert(toRead.startsWith(tag));
-							//numReadSoFar += tag.length();
-						}
+						action.accept(content);
 					} catch (Throwable e) {
-						long problemStart = 1 + countNewlines(fullInput.substring(0, numReadSoFar));
+						long problemStart = 1 + countNewlines(fullInput.substring(0, startIdxFromRaw));
 						throw new RuntimeException("Error on line " + problemStart + ": " + e.getMessage(), e);
 					}
 				};
