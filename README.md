@@ -1,77 +1,123 @@
-# <img align="left" src="durian-rx.png"> DurianRx: Reactive getters, powered by RxJava and ListenableFuture
-
-[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.durian%3Adurian--rx-blue.svg)](https://bintray.com/diffplug/opensource/durian-rx/view)
-[![Latest version](http://img.shields.io/badge/latest-1.0.1-blue.svg)](https://github.com/diffplug/durian-rx/releases/latest)
-[![Javadoc](http://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/durian-rx/javadoc/1.0.1/)
+# <img align="left" src="freshmark.png"> FreshMark: Keep your markdown fresh
+<!---freshmark shields
+output = [
+	link(shield('Maven artifact', 'mavenCentral', '{{group}}:{{name}}', 'blue'), 'https://bintray.com/{{org}}/opensource/{{name}}/view'),
+	link(shield('Latest version', 'latest', '{{stable}}', 'blue'), 'https://github.com/{{org}}/{{name}}/releases/latest'),
+	link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/{{stable}}/'),
+	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
+	'',
+	link(shield('Changelog', 'changelog', '{{version}}', 'bright-green'), 'CHANGES.md'),
+	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}')
+	'',
+	link(shield('Gradle', 'supported', 'https://github.com/diffplug/spotless#adding-spotless-to-java-source', 'green'), 'CHANGES.md'),
+	link(shield('CLI', 'supported', '{{version}}', 'green'), 'CHANGES.md'),
+	].join('\n')
+-->
+[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.durian%3Adurian-blue.svg)](https://bintray.com/diffplug/opensource/durian/view)
+[![Latest version](http://img.shields.io/badge/latest-3.2.0-blue.svg)](https://github.com/diffplug/durian/releases/latest)
+[![Javadoc](http://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/durian/javadoc/3.2.0/)
 [![License](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](http://img.shields.io/badge/changelog-1.1.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
-[![Travis CI](https://travis-ci.org/diffplug/durian-rx.svg?branch=master)](https://travis-ci.org/diffplug/durian-rx)
+[![Changelog](http://img.shields.io/badge/changelog-3.3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Travis CI](https://travis-ci.org/diffplug/durian.svg?branch=master)](https://travis-ci.org/diffplug/durian)
+<!---freshmark /shields -->
 
-DurianRx unifies RxJava's [Observable](http://reactivex.io/documentation/observable.html) with Guava's [ListenableFuture](https://code.google.com/p/guava-libraries/wiki/ListenableFutureExplained).  If you happen to be using SWT as a widget toolkit, then you'll want to look at [DurianSwt](https://github.com/diffplug/durian-swt) as well.
+Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript programs into the comments of your Markdown, which statically generate the rest of the document.  By running these programs as part of your build script, your project's documentation will always stay up-to-date.
 
-```java
-Observable<SomeType> observable = someObservable();
-ListenableFuture<SomeType> future = someFuture();
-Rx.subscribe(observable, val -> doSomething(val));
-Rx.subscribe(future, val -> doSomething(val));
+Here is what the code looks like for the shields at the top of this document:
+
+```javascript
+<!---freshmark shields
+output = [
+	link(shield('Maven artifact', 'mavenCentral', '{{group}}:{{name}}', 'blue'), 'https://bintray.com/{{org}}/opensource/{{name}}/view'),
+	link(shield('Latest version', 'latest', '{{stable}}', 'blue'), 'https://github.com/{{org}}/{{name}}/releases/latest'),
+	link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/{{stable}}/'),
+	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
+	].join('\n')
+-->
+... (the results from the last time that FreshMark was run)
+<!---freshmark /shields -->
 ```
 
-It also provides [reactive getters](src/com/diffplug/common/rx/RxGetter.java?ts=4), a simple abstraction for piping data which allows access via `T get()` or `Observable<T> asObservable()`.
+In addition to generating Markdown from scratch, FreshMark can also modify existing Markdown.  This ensures that any inline documentation links stay fresh.
 
-```java
-RxBox<Point> mousePos = RxBox.of(new Point(0, 0));
-this.addMouseListener(e -> mousePos.set(new Point(e.x, e.y)));
-
-Rectangle hotSpot = new Rectangle(0, 0, 10, 10)
-RxGetter<Boolean> isMouseOver = mousePos.map(hotSpot::contains);
+```javascript
+<!---freshmark javadoc
+output = prefixDelimReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable)
+-->
+To run FreshMark on some text, call [FreshMark.compile()](https://diffplug.github.io/freshmark/javadoc/1.0/com/diffplug/freshmark/FreshMark.html)
+<!---freshmark /javadoc -->
 ```
 
-Debugging an error which involves lots of callbacks can be difficult.  To make this easier, DurianRx includes a [tracing capability](src/com/diffplug/common/rx/RxTracingPolicy.java?ts=4), which makes this task easier.
+## How it works
 
-```java
-// anytime an error is thrown in an Rx callback, the stack trace of the error
-// will be wrapped by the stack trace of the original subscription
-DurianPlugins.set(RxTracingPolicy.class, new LogSubscriptionTrace()).
+FreshMark has three pieces, `SECTION`, `PROGRAM`, and `INPUT`.  They are parsed as shown below:
+
+```javascript
+<!---freshmark SECTION (identifier)
+PROGRAM (javascript)
+-->
+INPUT (markdown)
+<!---freshmark /SECTION -->
 ```
 
-Lastly, DurianRx provides convenience classes for manipulating Guava's immutable collections inside reactive containers, such as `RxSet<T> extends RxBox<ImmutableSet<T>>`, which can be used as such:
+When `PROGRAM` is run, there are two magic variables:
 
-```java
-public void mouseClicked(MouseEvent e) {
-	rxMouseOver.get().ifPresent(cell -> {
-		Set<Integer> currentSelection = rxSelection.get();
-		if (e.isControlDown()) {
-			// control => toggle mouseOver item in selection
-			if (currentSelection.contains(cell)) {
-				rxSelection.remove(cell);
-			} else {
-				rxSelection.add(cell);
-			}
-		} else {
-			// no control => set selection to mouseOver
-			rxSelection.set(Collections.singleton(cell));
-		}
-	});
+* `input` - This is everything inside of INPUT (guaranteed to have only unix newlines at runtime)
+* `output` - The script must assign to this variable.  FreshMark will generate a new string where the `INPUT` section has been replaced with this value.
+
+Only four functions are provided:
+
+* `link(text, url)` - returns a markdown link
+* `image(altText, url)` - returns a markdown image
+* `shield(altText, subject, status, color)` - returns a markdown image generated by [shields.io](http://shields.io/).
+* `prefixDelimReplace(input, prefix, delimiter, replace)` - updates URLs which contain version numbers.
+	* example: for parameters `prefix='http://website/', delimiter='/', replace='2.0'`
+	* input `[entry point](http://website/1.2/docs/entryPoint)` would be transformed into `[entry point](http://website/2.0/docs/entryPoint)`
+
+It's full ECMAScript 5.1, so you can define any other functions you like, but these should be all you need.
+
+When you run FreshMark, you can supply it with a map of key-value pairs using the command line or via a properties file.  If you're running FreshMark from a build system plugin such as Gradle, then all of your project's metadata will automatically be supplied.  These key-value pairs are used in the following way:
+
+* Before `PROGRAM` is executed, any `{{key}}` templates will be substituted with their corresponding value.
+* When `PROGRAM` is executed, all of these key-value pairs are available as variables.
+
+## How to run it
+
+At the moment, you can run FreshMark using [Gradle](#gradle), the [console](#console), or the [Java API](#java-api directly.  If you need a different way to run FreshMark, build it and submit a PR!  We'd be happy to help [in Gitter](https://gitter.im/diffplug/freshmark).
+
+### Gradle
+
+Integration with Gradle is provided through the [Spotless](https://github.com/diffplug/spotless) plugin.  Spotless can also enforce lots of style rules as well (tab vs whitespace, Java import ordering, etc), but it's completely a-la-carte.  To just apply FreshMark to all of the markdown in your project (and nothing else), simply add this to your `build.gradle`:
+
+```groovy
+plugins {
+	id 'com.diffplug.gradle.spotless' version '1.4.0'
 }
 
-...
-
-Rx.subscribe(rxSelection, set -> {
-	// take some action in response to
-	// selection change
-});
+spotless {
+	freshmark '**/*.md'
+}
 ```
 
-Perhaps most useful of all is the [Immutables](https://diffplug.github.io/durian-rx/javadoc/snapshot/com/diffplug/common/rx/Immutables.html) utility class, which helps with all kinds of manipulations of Guava's immmutable collections.
+See the [spotless docs] for more details.
 
-DurianRx's only requirements are [Guava](https://github.com/google/guava), [RxJava](https://github.com/reactivex/rxjava), and [Durian](https://github.com/diffplug/durian).
+### CLI
+
+This repo is a command line application.  Just run `freshmark.bat` (Windows) or `freshmark` (Linux and Mac) to run it.
+
+```
+freshmark --help
+
+
+```
+
+### Java API
+
+There's just one class that really matters.  If you want to add more functions, change which variables are there, make the behavior depend on the section name, etc, just take a peek at [FreshMark.java](src/main/java/com/diffplug/freshmark/FreshMark.java).
 
 ## Acknowledgements
-
-* Many thanks to [RxJava](https://github.com/reactivex/rxjava) and [Guava](https://github.com/google/guava).
-* Stream Collectors for Guava collections inspired by [Maciej Miklas's blog post](http://blog.comsysto.com/2014/11/12/java-8-collectors-for-guava-collections/).
-* Formatted by [spotless](https://github.com/diffplug/spotless), [as such](https://github.com/diffplug/durian-rx/blob/v1.0/build.gradle?ts=4#L70-L90).
+* Scripts run by [JScriptBox](https://github.com/diffplug/jscriptbox).
 * Bugs found by [findbugs](http://findbugs.sourceforge.net/), [as such](https://github.com/diffplug/durian-rx/blob/v1.0/build.gradle?ts=4#L92-L116).
 * Scripts in the `.ci` folder are inspired by [Ben Limmer's work](http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/).
 * Built by [gradle](http://gradle.org/).
