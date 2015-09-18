@@ -23,7 +23,7 @@ import org.junit.Test;
 import com.diffplug.common.base.StringPrinter;
 
 public class ParserTest {
-	static final Parser freshmarkParser = new Parser("<!---freshmark", "-->");
+	static final Parser freshmarkParser = new FreshMark(null, null).parser;
 
 	@Test
 	public void testBodyAndTags() {

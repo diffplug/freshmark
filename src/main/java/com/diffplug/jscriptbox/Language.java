@@ -22,7 +22,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-/** Interface which converts the result of a {@link ScriptBox} into a {@link ScriptEngine}. */
+/** Interface which converts the result of a {@link JScriptBox} into a {@link ScriptEngine}. */
 public interface Language {
 	/**
 	 * @param names		a map from names which should be defined in the script to their objects, particularly elements of {@link ArityN}.
@@ -31,7 +31,7 @@ public interface Language {
 	 */
 	ScriptEngine initializeEngine(Map<String, Object> names) throws ScriptException;
 
-	/** Language implementation for nashorn. */
+	/** Language implementation for javascript using the nashorn engine. */
 	public static Language javascript() {
 		return map -> {
 			ScriptEngine jsEngine = new ScriptEngineManager().getEngineByName("nashorn");

@@ -79,18 +79,18 @@ public abstract class CommentScript {
 	/** Parser which splits up the raw document into structured tags which get passed to the compiler. */
 	final Parser parser;
 
-	/** Compiles a single section/program/input combo into the appropriate output. */
+	/** Compiles a single section/script/input combo into the appropriate output. */
 	final Parser.Compiler compiler = new Parser.Compiler() {
 		@Override
-		public String compileSection(String section, String program, String input) {
+		public String compileSection(String section, String script, String input) {
 			return Errors.rethrow().get(() -> {
 				ScriptEngine engine = setupScriptEngine(section);
 
-				// apply the templating engine to the program
-				String templatedProgram = mustacheTemplate(program, key -> keyToValue(section, key));
+				// apply the templating engine to the script
+				String templatedProgram = template(section, script);
 				// populate the input data
 				engine.put("input", input);
-				// evaluate the program and get the result
+				// evaluate the script and get the result
 				engine.eval(templatedProgram);
 				String compiled = Check.cast(engine.get("output"), String.class);
 				// make sure that the compiled output starts and ends with a newline,
@@ -101,11 +101,11 @@ public abstract class CommentScript {
 				if (!compiled.endsWith("\n")) {
 					compiled = compiled + "\n";
 				}
-				return parser.prefix + " " + section + "\n" +
-						program +
-						parser.postfix +
+				return parser.intron + " " + section + "\n" +
+						script +
+						parser.exon +
 						compiled +
-						parser.prefix + " /" + section + " " + parser.postfix;
+						parser.intron + " /" + section + " " + parser.exon;
 			});
 		}
 	};

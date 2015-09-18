@@ -69,6 +69,11 @@ public class TypedScriptEngine {
 		return Check.castOpt(scriptEngine.get(name), clazz);
 	}
 
+	/** Puts the given value into the script engine. */
+	public void put(String name, Object value) {
+		scriptEngine.put(name, value);
+	}
+
 	/** The underlying ScriptEngine. */
 	public ScriptEngine getRaw() {
 		return scriptEngine;

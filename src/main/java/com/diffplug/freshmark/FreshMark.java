@@ -27,8 +27,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
-import com.diffplug.jscriptbox.ScriptBox;
 
 /** The defaault implementation. */
 public class FreshMark extends CommentScript {
@@ -46,7 +46,7 @@ public class FreshMark extends CommentScript {
 
 	@Override
 	protected ScriptEngine setupScriptEngine(String section) throws ScriptException {
-		return ScriptBox.create()
+		return JScriptBox.create()
 				.setAll(properties)
 				.set("link").toFunc2(FreshMark::link)
 				.set("image").toFunc2(FreshMark::image)

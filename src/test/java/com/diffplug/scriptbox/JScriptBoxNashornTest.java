@@ -24,13 +24,13 @@ import javax.script.ScriptException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
-import com.diffplug.jscriptbox.ScriptBox;
 
-public class ScriptBoxNashornTest {
+public class JScriptBoxNashornTest {
 	@Test
 	public void testBasicExpressions() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build(Language.javascript());
+		ScriptEngine engine = JScriptBox.create().build(Language.javascript());
 		Assert.assertEquals("abc", engine.eval("'abc'"));
 		Assert.assertEquals(123, engine.eval("123"));
 		Assert.assertEquals(123.5, engine.eval("123.5"));
@@ -38,7 +38,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testBasicScript() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build(Language.javascript());
+		ScriptEngine engine = JScriptBox.create().build(Language.javascript());
 		engine.eval("var txt = 'abc';" +
 				"var int = 123;" +
 				"var float = 123.5;");
@@ -53,7 +53,7 @@ public class ScriptBoxNashornTest {
 	@Test
 	public void testVoid0() throws ScriptException {
 		AtomicBoolean wasRun = new AtomicBoolean(false);
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("void0").toVoid0(() -> wasRun.set(true))
 				.build(Language.javascript());
 		engine.eval("void0()");
@@ -63,7 +63,7 @@ public class ScriptBoxNashornTest {
 	@Test
 	public void testVoid1() throws ScriptException {
 		AtomicReference<String> arg1 = new AtomicReference<>();
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("void1").toVoid1(arg1::set)
 				.build(Language.javascript());
 		engine.eval("void1('it lives!')");
@@ -74,7 +74,7 @@ public class ScriptBoxNashornTest {
 	public void testVoid2() throws ScriptException {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("void2").toVoid2((a, b) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -90,7 +90,7 @@ public class ScriptBoxNashornTest {
 		AtomicReference<Object> arg1 = new AtomicReference<>();
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("void3").toVoid3((a, b, c) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -109,7 +109,7 @@ public class ScriptBoxNashornTest {
 		AtomicReference<Object> arg2 = new AtomicReference<>();
 		AtomicReference<Object> arg3 = new AtomicReference<>();
 		AtomicReference<Object> arg4 = new AtomicReference<>();
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("void4").toVoid4((a, b, c, d) -> {
 					arg1.set(a);
 					arg2.set(b);
@@ -129,7 +129,7 @@ public class ScriptBoxNashornTest {
 	//////////////////////////////
 	@Test
 	public void testFunc0() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("func0").toFunc0(() -> "wassup")
 				.build(Language.javascript());
 		Assert.assertEquals("wassup", engine.eval("func0()"));
@@ -137,7 +137,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testFunc1() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("func1").toFunc1(a -> a)
 				.build(Language.javascript());
 		Assert.assertEquals("identity", engine.eval("func1('identity')"));
@@ -147,7 +147,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testFunc2() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("func2").toFunc2((String a, String b) -> a + b)
 				.build(Language.javascript());
 		Assert.assertEquals("ab", engine.eval("func2('a', 'b')"));
@@ -155,7 +155,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testFunc3() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("func3").toFunc3((String a, String b, String c) -> a + b + c)
 				.build(Language.javascript());
 		Assert.assertEquals("abc", engine.eval("func3('a', 'b', 'c')"));
@@ -163,7 +163,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testFunc4() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create()
+		ScriptEngine engine = JScriptBox.create()
 				.set("func4").toFunc4((String a, String b, String c, String d) -> a + b + c + d)
 				.build(Language.javascript());
 		Assert.assertEquals("abcd", engine.eval("func4('a', 'b', 'c', 'd')"));

@@ -16,7 +16,7 @@
 package com.diffplug.jscriptbox;
 
 /**
- * We'd like to pass lambdas to {@link ScriptBox} through a fluent API,
+ * We'd like to pass lambdas to {@link JScriptBox} through a fluent API,
  * which means that we need to describe the function signature
  * in the method name.
  * <p>

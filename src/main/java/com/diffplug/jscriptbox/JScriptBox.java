@@ -30,18 +30,18 @@ import com.diffplug.jscriptbox.ArityN.*;
  * ScriptBox makes it easy to expose both objects and
  * functions to client code in a language-agnostic way.
  */
-public class ScriptBox {
+public class JScriptBox {
 	private Map<String, Object> names = new HashMap<>();
 
-	protected ScriptBox() {}
+	protected JScriptBox() {}
 
 	/** Creates a new NashornHarness and returns it. */
-	public static ScriptBox create() {
-		return new ScriptBox();
+	public static JScriptBox create() {
+		return new JScriptBox();
 	}
 
 	/** Sets all of the properties contained in the given map. */
-	public ScriptBox setAll(Map<String, ?> map) {
+	public JScriptBox setAll(Map<String, ?> map) {
 		names.putAll(map);
 		return this;
 	}
@@ -68,32 +68,32 @@ public class ScriptBox {
 			this.name = checkValidIdentifier(name);
 		}
 
-		public ScriptBox toValue(Object value) {
+		public JScriptBox toValue(Object value) {
 			names.put(name, value);
-			return ScriptBox.this;
+			return JScriptBox.this;
 		}
 
 		// @formatter:off
-		public 				ScriptBox toVoid0(Void0 value) { return toValue(value); }
-		public <A>			ScriptBox toVoid1(Void1<A> value) { return toValue(value); }
-		public <A, B>		ScriptBox toVoid2(Void2<A, B> value) { return toValue(value); }
-		public <A, B, C>	ScriptBox toVoid3(Void3<A, B, C> value) { return toValue(value); }
-		public <A, B, C, D>	ScriptBox toVoid4(Void4<A, B, C, D> value) { return toValue(value); }
+		public 				JScriptBox toVoid0(Void0 value) { return toValue(value); }
+		public <A>			JScriptBox toVoid1(Void1<A> value) { return toValue(value); }
+		public <A, B>		JScriptBox toVoid2(Void2<A, B> value) { return toValue(value); }
+		public <A, B, C>	JScriptBox toVoid3(Void3<A, B, C> value) { return toValue(value); }
+		public <A, B, C, D>	JScriptBox toVoid4(Void4<A, B, C, D> value) { return toValue(value); }
 
-		public <R>				ScriptBox toFunc0(Func0<R> value) { return toValue(value); }
-		public <A, R>			ScriptBox toFunc1(Func1<A, R> value) { return toValue(value); }
-		public <A, B, R>		ScriptBox toFunc2(Func2<A, B, R> value) { return toValue(value); }
-		public <A, B, C, R>		ScriptBox toFunc3(Func3<A, B, C, R> value) { return toValue(value); }
-		public <A, B, C, D, R>	ScriptBox toFunc4(Func4<A, B, C, D, R> value) { return toValue(value); }
+		public <R>				JScriptBox toFunc0(Func0<R> value) { return toValue(value); }
+		public <A, R>			JScriptBox toFunc1(Func1<A, R> value) { return toValue(value); }
+		public <A, B, R>		JScriptBox toFunc2(Func2<A, B, R> value) { return toValue(value); }
+		public <A, B, C, R>		JScriptBox toFunc3(Func3<A, B, C, R> value) { return toValue(value); }
+		public <A, B, C, D, R>	JScriptBox toFunc4(Func4<A, B, C, D, R> value) { return toValue(value); }
 		// @formatter:on
 	}
 
-	/** Returns a ScriptEngine with the stuff above. */
+	/** Returns a {@link ScriptEngine} which has been populated with the values of this box. */
 	public ScriptEngine build(Language language) throws ScriptException {
 		return language.initializeEngine(names);
 	}
 
-	/** Returns a {@link TypedScriptEngine} with the stuff above. */
+	/** Returns a {@link TypedScriptEngine} which has been populated with the values of this box. */
 	public TypedScriptEngine buildTyped(Language language) throws ScriptException {
 		return new TypedScriptEngine(build(language));
 	}

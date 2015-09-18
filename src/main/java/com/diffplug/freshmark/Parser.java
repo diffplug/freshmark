@@ -21,19 +21,13 @@ import java.util.regex.Pattern;
 
 /** A format defined by "tag start" and "tag end" chunks of text. */
 class Parser {
-	final String prefix, postfix;
+	final String intron, exon;
 	final Pattern pattern;
 
-	Parser(String prefix, String postfix, String regex) {
-		this.prefix = prefix;
-		this.postfix = postfix;
+	Parser(String intron, String exon, String regex) {
+		this.intron = intron;
+		this.exon = exon;
 		pattern = Pattern.compile(regex, Pattern.DOTALL);
-	}
-
-	Parser(String prefix, String postfix) {
-		this.prefix = prefix;
-		this.postfix = postfix;
-		pattern = Pattern.compile(Pattern.quote(prefix) + "(.*?)" + Pattern.quote(postfix), Pattern.DOTALL);
 	}
 
 	/**
@@ -87,7 +81,7 @@ class Parser {
 							numReadSoFar += input.length();
 						} else {
 							// tag
-							String tag = prefix + input + postfix;
+							String tag = intron + input + exon;
 							assert(toRead.startsWith(tag));
 							numReadSoFar += tag.length();
 						}
