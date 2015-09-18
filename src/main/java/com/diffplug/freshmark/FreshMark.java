@@ -15,85 +15,94 @@
  */
 package com.diffplug.freshmark;
 
-import java.util.function.Function;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.jscriptbox.Language;
 import com.diffplug.jscriptbox.ScriptBox;
-import com.diffplug.jscriptbox.TypedScriptEngine;
 
-/**
- * The core implementation a FreshMark compiler.  Provides two methods:
- * <ul>
- * <li>{@link #keyToValue} - defines how template keys are transformed into values</li>
- * <li>{@link #setupScriptEngine} - initializes any functions or variables which should be available to the program</li>
- * </ul>
- * See {@link FreshMarkDefault} for the default implementation.
- */
-public abstract class FreshMark {
-	/** Parser which splits up the raw document into structured tags which get passed to the compiler. */
-	static final Parser parser = new Parser("<!---freshmark", "-->");
+/** The defaault implementation. */
+public class FreshMark extends CommentScript {
+	private static final String INTRON = "<!---freshmark";
+	private static final String EXON = "-->";
 
-	/** Compiles a single section/program/input combo into the appropriate output. */
-	final Parser.Compiler compiler = new Parser.Compiler() {
-		@Override
-		public String compileSection(String section, String program, String input) {
-			return Errors.rethrow().get(() -> {
-				ScriptBox box = ScriptBox.create();
-				setupScriptEngine(section, box);
-				TypedScriptEngine engine = box.buildTyped(Language.nashorn());
+	private final Map<String, ?> properties;
+	private final Consumer<String> warningStream;
 
-				// apply the templating engine to the program
-				String templatedProgram = template(program, key -> keyToValue(section, key));
-				// populate the input data
-				engine.getRaw().put("input", input);
-				// evaluate the program and get the result
-				engine.eval(templatedProgram);
-				String compiled = engine.get("output", String.class);
-				// make sure that the compiled output starts and ends with a newline,
-				// so that the tags stay separated separated nicely
-				if (!compiled.startsWith("\n")) {
-					compiled = "\n" + compiled;
-				}
-				if (!compiled.endsWith("\n")) {
-					compiled = compiled + "\n";
-				}
-				return parser.prefix + " " + section + "\n" +
-						program +
-						parser.postfix +
-						compiled +
-						parser.prefix + " /" + section + " " + parser.postfix;
-			});
-		}
-	};
-
-	/** Compiles the given input string. Input must contain only unix newlines, output is guaranteed to be the same. */
-	public String compile(String input) {
-		return parser.compile(input, compiler);
+	public FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
+		super(INTRON, EXON, Pattern.quote(INTRON) + "(.*?)" + Pattern.quote(EXON));
+		this.properties = properties;
+		this.warningStream = warningStream;
 	}
 
-	/** For the given section, return the proper templated value for the given key. */
-	protected abstract String keyToValue(String section, String key);
+	@Override
+	protected ScriptEngine setupScriptEngine(String section) throws ScriptException {
+		return ScriptBox.create()
+				.setAll(properties)
+				.set("link").toFunc2(FreshMark::link)
+				.set("image").toFunc2(FreshMark::image)
+				.set("shield").toFunc4(FreshMark::shield)
+				.set("prefixDelimiterReplace").toFunc4(FreshMark::prefixDelimiterReplace)
+				.build(Language.javascript());
+	}
 
-	/** For the given section, setup the JScriptBox appropriately.  The `input` value will be set for you, but you need to do everything else. */
-	protected abstract void setupScriptEngine(String section, ScriptBox scriptBox);
+	@Override
+	protected String keyToValue(String section, String key) {
+		Object value = properties.get(key);
+		if (value != null) {
+			return Objects.toString(value);
+		} else {
+			warningStream.accept("Unknown key '" + key + "'");
+			return key + "=UNKNOWN";
+		}
+	}
 
-	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */
-	static String template(String input, Function<String, String> keyToValue) {
-		Matcher matcher = TEMPLATE.matcher(input);
-		StringBuilder result = new StringBuilder(input.length() * 3 / 2);
+	////////////////////////
+	// built-in functions //
+	////////////////////////
+	/** Generates a markdown link. */
+	static String link(String text, String url) {
+		return "[" + text + "](" + url + ")";
+	}
 
+	/** Generates a markdown image. */
+	static String image(String altText, String url) {
+		return "!" + link(altText, url);
+	}
+
+	/** Generates shields using <a href="http://shields.io/">shields.io</a>. */
+	static String shield(String altText, String subject, String status, String color) {
+		return image(altText, "https://img.shields.io/badge/" + shieldEscape(subject) + "-" + shieldEscape(status) + "-" + shieldEscape(color) + ".svg");
+	}
+
+	private static String shieldEscape(String raw) {
+		return Errors.rethrow().get(() -> URLEncoder.encode(
+				raw.replace("_", "__").replace("-", "--").replace(" ", "_"),
+				StandardCharsets.UTF_8.name()));
+	}
+
+	/** Replaces after prefix and before delimiter with replacement.  */
+	static String prefixDelimiterReplace(String input, String prefix, String delimiter, String replacement) {
+		StringBuilder builder = new StringBuilder(input.length() * 3 / 2);
 		int lastElement = 0;
+		Pattern pattern = Pattern.compile("(.*?" + Pattern.quote(prefix) + ")(.*?)(" + Pattern.quote(delimiter) + ")", Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(input);
 		while (matcher.find()) {
-			result.append(matcher.group(1));
-			result.append(keyToValue.apply(matcher.group(2)));
+			builder.append(matcher.group(1));
+			builder.append(replacement);
+			builder.append(matcher.group(3));
 			lastElement = matcher.end();
 		}
-		result.append(input.substring(lastElement));
-		return result.toString();
+		builder.append(input.substring(lastElement));
+		return builder.toString();
 	}
-
-	private static final Pattern TEMPLATE = Pattern.compile("(.*?)\\{\\{(.*?)\\}\\}", Pattern.DOTALL);
 }

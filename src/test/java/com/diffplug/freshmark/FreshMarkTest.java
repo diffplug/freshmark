@@ -25,7 +25,7 @@ public class FreshMarkTest {
 	public void testTemplate() {
 		String before = TestResource.getTestResource("template_before.txt");
 		String after = TestResource.getTestResource("template_after.txt");
-		String afterActual = FreshMark.template(before, key -> key.toUpperCase(Locale.US));
+		String afterActual = CommentScript.mustacheTemplate(before, key -> key.toUpperCase(Locale.US));
 		Assert.assertEquals(after, afterActual);
 	}
 }

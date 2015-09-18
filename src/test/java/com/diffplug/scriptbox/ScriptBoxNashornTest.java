@@ -30,7 +30,7 @@ import com.diffplug.jscriptbox.ScriptBox;
 public class ScriptBoxNashornTest {
 	@Test
 	public void testBasicExpressions() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build(Language.nashorn());
+		ScriptEngine engine = ScriptBox.create().build(Language.javascript());
 		Assert.assertEquals("abc", engine.eval("'abc'"));
 		Assert.assertEquals(123, engine.eval("123"));
 		Assert.assertEquals(123.5, engine.eval("123.5"));
@@ -38,7 +38,7 @@ public class ScriptBoxNashornTest {
 
 	@Test
 	public void testBasicScript() throws ScriptException {
-		ScriptEngine engine = ScriptBox.create().build(Language.nashorn());
+		ScriptEngine engine = ScriptBox.create().build(Language.javascript());
 		engine.eval("var txt = 'abc';" +
 				"var int = 123;" +
 				"var float = 123.5;");
@@ -55,7 +55,7 @@ public class ScriptBoxNashornTest {
 		AtomicBoolean wasRun = new AtomicBoolean(false);
 		ScriptEngine engine = ScriptBox.create()
 				.set("void0").toVoid0(() -> wasRun.set(true))
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		engine.eval("void0()");
 		Assert.assertEquals(true, wasRun.get());
 	}
@@ -65,7 +65,7 @@ public class ScriptBoxNashornTest {
 		AtomicReference<String> arg1 = new AtomicReference<>();
 		ScriptEngine engine = ScriptBox.create()
 				.set("void1").toVoid1(arg1::set)
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		engine.eval("void1('it lives!')");
 		Assert.assertEquals("it lives!", arg1.get());
 	}
@@ -79,7 +79,7 @@ public class ScriptBoxNashornTest {
 					arg1.set(a);
 					arg2.set(b);
 				})
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		engine.eval("void2('a', 'b')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -96,7 +96,7 @@ public class ScriptBoxNashornTest {
 					arg2.set(b);
 					arg3.set(c);
 				})
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		engine.eval("void3('a', 'b', 'c')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -116,7 +116,7 @@ public class ScriptBoxNashornTest {
 					arg3.set(c);
 					arg4.set(d);
 				})
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		engine.eval("void4('a', 'b', 'c', 'd')");
 		Assert.assertEquals("a", arg1.get());
 		Assert.assertEquals("b", arg2.get());
@@ -131,7 +131,7 @@ public class ScriptBoxNashornTest {
 	public void testFunc0() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
 				.set("func0").toFunc0(() -> "wassup")
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		Assert.assertEquals("wassup", engine.eval("func0()"));
 	}
 
@@ -139,7 +139,7 @@ public class ScriptBoxNashornTest {
 	public void testFunc1() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
 				.set("func1").toFunc1(a -> a)
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		Assert.assertEquals("identity", engine.eval("func1('identity')"));
 		Assert.assertEquals(4, engine.eval("func1(4)"));
 		Assert.assertEquals(4.5, engine.eval("func1(4.5)"));
@@ -149,7 +149,7 @@ public class ScriptBoxNashornTest {
 	public void testFunc2() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
 				.set("func2").toFunc2((String a, String b) -> a + b)
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		Assert.assertEquals("ab", engine.eval("func2('a', 'b')"));
 	}
 
@@ -157,7 +157,7 @@ public class ScriptBoxNashornTest {
 	public void testFunc3() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
 				.set("func3").toFunc3((String a, String b, String c) -> a + b + c)
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		Assert.assertEquals("abc", engine.eval("func3('a', 'b', 'c')"));
 	}
 
@@ -165,7 +165,7 @@ public class ScriptBoxNashornTest {
 	public void testFunc4() throws ScriptException {
 		ScriptEngine engine = ScriptBox.create()
 				.set("func4").toFunc4((String a, String b, String c, String d) -> a + b + c + d)
-				.build(Language.nashorn());
+				.build(Language.javascript());
 		Assert.assertEquals("abcd", engine.eval("func4('a', 'b', 'c', 'd')"));
 	}
 }

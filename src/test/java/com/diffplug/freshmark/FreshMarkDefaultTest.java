@@ -28,7 +28,7 @@ public class FreshMarkDefaultTest {
 	public void testPrefixDelimReplacement() {
 		String before = TestResource.getTestResource("javadoc_before.txt");
 		String after = TestResource.getTestResource("javadoc_after.txt");
-		String afterActual = FreshMarkDefault.prefixDelimiterReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
+		String afterActual = FreshMark.prefixDelimiterReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
 		Assert.assertEquals(after, afterActual);
 	}
 
@@ -44,7 +44,7 @@ public class FreshMarkDefaultTest {
 		props.put("name", "durian");
 		props.put("org", "diffplug");
 		List<String> warnings = new ArrayList<>();
-		FreshMark freshmark = new FreshMarkDefault(props, warnings::add);
+		CommentScript freshmark = new FreshMark(props, warnings::add);
 		String afterActual = freshmark.compile(before);
 		Assert.assertEquals(after, afterActual);
 		Assert.assertTrue(warnings.isEmpty());

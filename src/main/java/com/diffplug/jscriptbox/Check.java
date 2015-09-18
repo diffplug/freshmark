@@ -19,11 +19,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 /** Cheap (and performant) knock-off of Guava's Preconditions class. */
-final class Check {
+public final class Check {
 	private Check() {}
 
 	/** If test is false, throws an exception with a message where {@code %0} is replaced with {@code Objects.toString(o0)}. */
-	static void that(boolean test, String errorMsg, Object o0) {
+	public static void that(boolean test, String errorMsg, Object o0) {
 		if (!test) {
 			errorMsg = errorMsg.replace("%0", Objects.toString(o0));
 			throw new IllegalArgumentException(errorMsg);
@@ -31,7 +31,7 @@ final class Check {
 	}
 
 	/** If test is false, throws an exception with a message where {@code %0}, {@code %1} is replaced with {@code Objects.toString(o0)}, {@code Objects.toString(o1)}. */
-	static void that(boolean test, String errorMsg, Object o0, Object o1) {
+	public static void that(boolean test, String errorMsg, Object o0, Object o1) {
 		if (!test) {
 			errorMsg = errorMsg
 					.replace("%0", Objects.toString(o0))
@@ -41,7 +41,7 @@ final class Check {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> T cast(Object o, Class<T> clazz) {
+	public static <T> T cast(Object o, Class<T> clazz) {
 		if (o == null) {
 			throw new IllegalArgumentException("Expected object of type '" + clazz + "', was 'null'");
 		} else {
@@ -51,7 +51,7 @@ final class Check {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> Optional<T> castOpt(Object o, Class<T> clazz) {
+	public static <T> Optional<T> castOpt(Object o, Class<T> clazz) {
 		if (o == null) {
 			return Optional.empty();
 		} else {

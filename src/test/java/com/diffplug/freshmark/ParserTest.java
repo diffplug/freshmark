@@ -15,21 +15,32 @@
  */
 package com.diffplug.freshmark;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
 
 public class ParserTest {
+	static final Parser freshmarkParser = new Parser("<!---freshmark", "-->");
+
 	@Test
 	public void testBodyAndTags() {
-		TestResource.ALL.forEach(ParserTest::testCaseBodyAndTags);
+		Arrays.asList("empty.txt",
+				"mismatched.txt",
+				"nocomment.txt",
+				"noprogram.txt",
+				"simple.txt",
+				"unclosed.txt",
+				"unclosedthenstuff.txt")
+				.forEach(ParserTest::testCaseBodyAndTags);
 	}
 
 	static void testCaseBodyAndTags(String file) {
 		String raw = TestResource.getTestResource(file);
 		StringBuilder result = new StringBuilder(raw.length());
-		FreshMark.parser.bodyAndTags(raw, body -> {
+		freshmarkParser.bodyAndTags(raw, body -> {
 			result.append(body);
 		}, tag -> {
 			result.append("<!---freshmark");
@@ -60,7 +71,7 @@ public class ParserTest {
 
 	static void testCaseCompileSuccess(String file, String expected) {
 		String raw = TestResource.getTestResource(file);
-		String result = FreshMark.parser.compile(raw, (section, program, in) -> {
+		String result = freshmarkParser.compile(raw, (section, program, in) -> {
 			return "section: " + section + "\nprogram: " + program + "input: " + in;
 		});
 		Assert.assertEquals(expected, result);
@@ -85,7 +96,7 @@ public class ParserTest {
 	static void testCaseCompileError(String file, String expected) {
 		String raw = TestResource.getTestResource(file);
 		try {
-			FreshMark.parser.compile(raw, (section, program, in) -> in);
+			freshmarkParser.compile(raw, (section, program, in) -> in);
 			Assert.fail("Expected an error");
 		} catch (Throwable e) {
 			Assert.assertEquals(expected, e.getMessage());

@@ -24,10 +24,16 @@ class Parser {
 	final String prefix, postfix;
 	final Pattern pattern;
 
+	Parser(String prefix, String postfix, String regex) {
+		this.prefix = prefix;
+		this.postfix = postfix;
+		pattern = Pattern.compile(regex, Pattern.DOTALL);
+	}
+
 	Parser(String prefix, String postfix) {
 		this.prefix = prefix;
 		this.postfix = postfix;
-		pattern = Pattern.compile(prefix + "(.*?)" + postfix, Pattern.DOTALL);
+		pattern = Pattern.compile(Pattern.quote(prefix) + "(.*?)" + Pattern.quote(postfix), Pattern.DOTALL);
 	}
 
 	/**

@@ -32,7 +32,7 @@ public interface Language {
 	ScriptEngine initializeEngine(Map<String, Object> names) throws ScriptException;
 
 	/** Language implementation for nashorn. */
-	public static Language nashorn() {
+	public static Language javascript() {
 		return map -> {
 			ScriptEngine jsEngine = new ScriptEngineManager().getEngineByName("nashorn");
 			ScriptContext context = jsEngine.getContext();
