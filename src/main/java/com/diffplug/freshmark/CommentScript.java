@@ -15,8 +15,6 @@
  */
 package com.diffplug.freshmark;
 
-import java.util.regex.Pattern;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
@@ -52,33 +50,18 @@ import com.diffplug.jscriptbox.Check;
  */
 public abstract class CommentScript {
 	/**
-	 * Creates a CommentScript with the given comment intron/exon pair.
-	 * <p>
-	 * Comment blocks will be parsed using the following regex:
-	 * <pre>
-	 * Pattern.quote(intron) + "(.*?)" + Pattern.quote(exon)
-	 * </pre>
-	 * */
-	protected CommentScript(String intron, String exon) {
-		this(intron, exon, Pattern.quote(intron) + "(.*?)" + Pattern.quote(exon));
-	}
-
-	/**
-	 * Creates a CommentScript with the given comment intron/exon pair, as well
-	 * as a custom regex.
-	 * <p>
-	 * Usually, you should use the {@link #CommentScript(String, String)} constructor,
-	 * unless there are some special rules for how comment blocks are parsed. 
+	 * Creates a CommentScript using the given parser to
+	 * delineate and combine comment blocks.
 	 */
-	protected CommentScript(String intron, String exon, String regex) {
-		parser = new Parser(intron, exon, regex);
+	protected CommentScript(Parser parser) {
+		this.parser = parser;
 	}
 
 	/** Parser which splits up the raw document into structured tags which get passed to the compiler. */
 	final Parser parser;
 
 	/** Compiles a single section/script/input combo into the appropriate output. */
-	final Parser.SectionCompiler compiler = new Parser.SectionCompiler() {
+	final ParserIntronExon.SectionCompiler compiler = new ParserIntronExon.SectionCompiler() {
 		@Override
 		public String compileSection(String section, String script, String input) {
 			return Errors.rethrow().get(() -> {

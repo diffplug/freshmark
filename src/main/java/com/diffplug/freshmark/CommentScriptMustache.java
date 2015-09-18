@@ -48,13 +48,8 @@ import java.util.regex.Pattern;
  */
 public abstract class CommentScriptMustache extends CommentScript {
 	/** @see CommentScript#CommentScript(String, String) */
-	protected CommentScriptMustache(String intron, String exon) {
-		super(intron, exon);
-	}
-
-	/** @see CommentScript#CommentScript(String, String, String) */
-	protected CommentScriptMustache(String intron, String exon, String regex) {
-		super(intron, exon, regex);
+	protected CommentScriptMustache(Parser parser) {
+		super(parser);
 	}
 
 	/** Replaces whatever is inside of {@code &#123;&#123;key&#125;&#125;} tags using the {@code keyToValue} function. */

@@ -16,19 +16,9 @@
 package com.diffplug.freshmark;
 
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /** A format defined by "tag start" and "tag end" chunks of text. */
-class Parser {
-	final String intron, exon;
-	final Pattern pattern;
-
-	Parser(String intron, String exon, String regex) {
-		this.intron = intron;
-		this.exon = exon;
-		pattern = Pattern.compile(regex, Pattern.DOTALL);
-	}
+public abstract class Parser {
 
 	/**
 	 * Given an input string, parses out the body sections from the tag sections.
@@ -37,20 +27,7 @@ class Parser {
 	 * @param body		called for every chunk of text outside a tag
 	 * @param tag		called for every chunk of text inside a tag
 	 */
-	protected void bodyAndTags(String rawInput, Consumer<String> body, Consumer<String> tag) {
-		Matcher matcher = pattern.matcher(rawInput);
-		int last = 0;
-		while (matcher.find()) {
-			if (matcher.start() > last) {
-				body.accept(rawInput.substring(last, matcher.start()));
-			}
-			tag.accept(matcher.group(1));
-			last = matcher.end();
-		}
-		if (last < rawInput.length()) {
-			body.accept(rawInput.substring(last));
-		}
-	}
+	protected abstract void bodyAndTags(String rawInput, Consumer<String> body, Consumer<String> tag);
 
 	/**
 	 * Reassembles a section/script/output chunk back into
@@ -61,21 +38,7 @@ class Parser {
 	 * @param output
 	 * @return
 	 */
-	protected String reassemble(String section, String script, String output) {
-		// make sure that the compiled output starts and ends with a newline,
-		// so that the tags stay separated separated nicely
-		if (!output.startsWith("\n")) {
-			output = "\n" + output;
-		}
-		if (!output.endsWith("\n")) {
-			output = output + "\n";
-		}
-		return intron + " " + section + "\n" +
-				script +
-				exon +
-				output +
-				intron + " /" + section + " " + exon;
-	}
+	protected abstract String reassemble(String section, String script, String output);
 
 	/** Interface which can compile a single section of a FreshMark document. */
 	@FunctionalInterface
@@ -106,9 +69,11 @@ class Parser {
 							numReadSoFar += input.length();
 						} else {
 							// tag
-							String tag = intron + input + exon;
-							assert(toRead.startsWith(tag));
-							numReadSoFar += tag.length();
+							// TODO: we don't have enough information to do line-based
+							// error checking, so it's just turned off entirely
+							//String tag = intron + input + exon;
+							//assert(toRead.startsWith(tag));
+							//numReadSoFar += tag.length();
 						}
 					} catch (Throwable e) {
 						long problemStart = 1 + countNewlines(fullInput.substring(0, numReadSoFar));

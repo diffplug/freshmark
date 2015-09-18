@@ -30,7 +30,7 @@ import com.diffplug.common.base.Errors;
 import com.diffplug.jscriptbox.JScriptBox;
 import com.diffplug.jscriptbox.Language;
 
-/** The defaault implementation. */
+/** The default implementation. */
 public class FreshMark extends CommentScriptMustache {
 	private static final String INTRON = "<!---freshmark";
 	private static final String EXON = "-->";
@@ -39,7 +39,7 @@ public class FreshMark extends CommentScriptMustache {
 	private final Consumer<String> warningStream;
 
 	public FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
-		super(INTRON, EXON, Pattern.quote(INTRON) + "(.*?)" + Pattern.quote(EXON));
+		super(new ParserIntronExon(INTRON, EXON));
 		this.properties = properties;
 		this.warningStream = warningStream;
 	}
