@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * A parser defined by "intron" and "extron" chunks of text.
  * 
- * @see {@link FreshMark}
+ * @see FreshMark
  */
 public class ParserIntronExon extends Parser {
 	final String intron, exon;
@@ -42,7 +42,7 @@ public class ParserIntronExon extends Parser {
 	/**
 	 * A Parser with the given comment intron/exon pair, with a custom regex.
 	 * <p>
-	 * Usually, you should use the {@link #Parser(String, String)} constructor,
+	 * Usually, you should use the {@link #ParserIntronExon(String, String)} constructor,
 	 * unless there are some special rules for how comment blocks are parsed. 
 	 */
 	public ParserIntronExon(String intron, String exon, String regex) {
@@ -74,15 +74,7 @@ public class ParserIntronExon extends Parser {
 		}
 	}
 
-	/**
-	 * Reassembles a section/script/output chunk back into
-	 * the full file.
-	 * 
-	 * @param section
-	 * @param script
-	 * @param body
-	 * @return
-	 */
+	/** Reassembles a section/script/output chunk back into the full file. */
 	@Override
 	protected String reassemble(String section, String script, String body) {
 		// make sure that the compiled output starts and ends with a newline,

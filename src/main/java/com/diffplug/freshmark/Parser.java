@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  * combines that output with the original document to generate
  * the final output.
  * 
- * @see {@link ParserIntronExtron}
+ * @see ParserIntronExtron
  */
 public abstract class Parser {
 	/** Interface which can compile a single section of a FreshMark document. */
