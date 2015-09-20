@@ -29,6 +29,7 @@ sourceCompatibility = VER_JAVA
 targetCompatibility = VER_JAVA
 
 dependencies {
+	compile "com.diffplug.jscriptbox:jscriptbox:${VER_JSCRIPTBOX}"
 	compile "com.diffplug.durian:durian:${VER_DURIAN}"
 	testCompile "junit:junit:${VER_JUNIT}"
 }
