@@ -49,8 +49,15 @@ public class FreshMark extends CommentScript {
 
 	@Override
 	protected ScriptEngine setupScriptEngine(String section) throws ScriptException {
-		return JScriptBox.create()
-				.setAllValid(properties)
+		JScriptBox jscriptBox = JScriptBox.create();
+		// add every property which is a valid keyword
+		properties.forEach((key, value) -> {
+			if (JScriptBox.isValidIdentifier(key) && !Nashorn.isReserved(key)) {
+				jscriptBox.set(key).toValue(value);
+			}
+		});
+		// add the functions and build the javascript
+		return jscriptBox
 				.set("link").toFunc2(FreshMark::link)
 				.set("image").toFunc2(FreshMark::image)
 				.set("shield").toFunc4(FreshMark::shield)
