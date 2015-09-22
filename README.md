@@ -6,12 +6,12 @@ output = [
 	link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/{{stable}}/'),
 	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
 	'',
-	link(shield('Changelog', 'changelog', '{{version}}', 'bright-green'), 'CHANGES.md'),
+	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
 	'',
-	link(shield('Gradle', 'Gradle', 'supported', 'bright-green'), '#gradle'),
-	link(shield('CLI', 'CLI', 'supported', 'bright-green'), '#cli'),
-	link(shield('Java API', 'Java API', 'supported', 'bright-green'), '#java-api'),
+	link(shield('Gradle', 'Gradle', 'supported', 'brightgreen'), '#gradle'),
+	link(shield('CLI', 'CLI', 'supported', 'brightgreen'), '#cli'),
+	link(shield('Java API', 'Java API', 'supported', 'brightgreen'), '#java-api'),
 	].join('\n')
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
@@ -19,12 +19,12 @@ output = [
 [![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/freshmark/javadoc/1.2.0/)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-bright--green.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
 
-[![Gradle](https://img.shields.io/badge/Gradle-supported-bright--green.svg)](#gradle)
-[![CLI](https://img.shields.io/badge/CLI-supported-bright--green.svg)](#cli)
-[![Java API](https://img.shields.io/badge/Java_API-supported-bright--green.svg)](#java-api)
+[![Gradle](https://img.shields.io/badge/Gradle-supported-brightgreen.svg)](#gradle)
+[![CLI](https://img.shields.io/badge/CLI-supported-brightgreen.svg)](#cli)
+[![Java API](https://img.shields.io/badge/Java_API-supported-brightgreen.svg)](#java-api)
 <!---freshmark /shields -->
 
 Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
