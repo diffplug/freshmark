@@ -10,8 +10,9 @@ output = [
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
 	'',
 	link(shield('Gradle', 'Works with', 'Gradle', 'ff69b4'), '#gradle'),
-	link(shield('CLI', 'Works with', 'CLI', 'ff69b4'), '#cli'),
+	link(shield('Console', 'Works with', 'Console', 'ff69b4'), '#console'),
 	link(shield('Java API', 'Works with', 'Java API', 'ff69b4'), '#java-api'),
+	link(shield('Contribute', 'Works with', 'CONTRIBUTIONS WELCOME', 'ff69b4'), '#how-to-run-it'),
 	].join('\n')
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
@@ -63,8 +64,8 @@ FreshMark has three pieces, `SECTION`, `SCRIPT`, and `BODY`.  They are parsed as
 
 ```javascript
 <!---freshmark SECTION
-var SCRIPT = 'any javascript can go here';
-// this particular freshmark script isn't very useful
+var javascript_here = 'this will be {{templated}} then executed as javascript';
+// this particular freshmark script doesn't modify the body at all
 output = input;
 -->
 BODY (markdown)
@@ -94,11 +95,11 @@ When you run FreshMark, you can supply it with a map of key-value pairs using th
 
 ## How to run it
 
-At the moment, you can run FreshMark using [Gradle](#gradle), the [console](#console), or the [Java API](#java-api directly.  If you need a different way to run FreshMark, build it and submit a PR!  We'd be happy to help [in Gitter](https://gitter.im/diffplug/freshmark).
+At the moment, you can run FreshMark using [Gradle](#gradle), the [console](#console), or the [Java API](#java-api) directly.  If you need a different way to run FreshMark, build it and submit a PR!  We'd be happy to help [in Gitter](https://gitter.im/diffplug/freshmark).
 
 ### Gradle
 
-Integration with Gradle is provided through the [Spotless](https://github.com/diffplug/spotless) plugin.  Spotless can also enforce lots of style rules as well (tab vs whitespace, Java import ordering, etc), but it's completely a-la-carte.  To just apply FreshMark to all of the markdown in your project (and nothing else), simply add this to your `build.gradle`:
+Integration with Gradle is provided through the [Spotless](https://github.com/diffplug/spotless) plugin.  Spotless can also enforce lots of style rules as well (tab vs space, Java import ordering, etc), but it's completely a-la-carte.  To just apply FreshMark to all of the markdown in your project (and nothing else), simply add this to your `build.gradle`:
 
 ```groovy
 plugins {
@@ -106,13 +107,13 @@ plugins {
 }
 
 spotless {
-	freshmark '**/*.md'
+	freshmark {}
 }
 ```
 
-See the [spotless docs] for more details.
+See the [spotless docs](https://github.com/diffplug/spotless) for more details.
 
-### CLI
+### Console
 
 This repo is a command line application.  Just run `freshmark.bat` (Windows) or `freshmark` (Linux and Mac) to run it.
 
@@ -124,7 +125,7 @@ freshmark --help
 
 ### Java API
 
-There's just one class that really matters.  If you want to add more functions, change which variables are there, make the behavior depend on the section name, etc, just take a peek at [FreshMark.java](src/main/java/com/diffplug/freshmark/FreshMark.java).
+There's just four classes in the [package](src/main/java/com/diffplug/freshmark).  If you want to add more functions, change which variables are there, make the behavior depend on the section name, etc, just take a peek at [FreshMark.java](src/main/java/com/diffplug/freshmark/FreshMark.java).  If you want to build some other kind of "comment language" (generating sections of a document by embedding scripts in its comments) take a look at [CommentScript.java](https://github.com/diffplug/freshmark/blob/master/src/main/java/com/diffplug/freshmark/CommentScript.java) - it's not specific to markdown or HTML-style comments.
 
 ## Acknowledgements
 * Scripts run by [JScriptBox](https://github.com/diffplug/jscriptbox).
