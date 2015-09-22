@@ -9,8 +9,9 @@ output = [
 	link(shield('Changelog', 'changelog', '{{version}}', 'bright-green'), 'CHANGES.md'),
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
 	'',
-	link(shield('Gradle', 'supported', 'https://github.com/diffplug/spotless#adding-spotless-to-java-source', 'green'), 'CHANGES.md'),
-	link(shield('CLI', 'supported', '{{version}}', 'green'), 'CHANGES.md'),
+	link(shield('Gradle', 'Gradle', 'supported', 'bright-green'), '#gradle'),
+	link(shield('CLI', 'CLI', 'supported', 'bright-green'), '#cli'),
+	link(shield('Java API', 'Java API', 'supported', 'bright-green'), '#java-api'),
 	].join('\n')
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
@@ -21,8 +22,9 @@ output = [
 [![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-bright--green.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
 
-[![Gradle](https://img.shields.io/badge/supported-https%3A%2F%2Fgithub.com%2Fdiffplug%2Fspotless%23adding--spotless--to--java--source-green.svg)](CHANGES.md)
-[![CLI](https://img.shields.io/badge/supported-1.3.0--SNAPSHOT-green.svg)](CHANGES.md)
+[![Gradle](https://img.shields.io/badge/Gradle-supported-bright--green.svg)](#gradle)
+[![CLI](https://img.shields.io/badge/CLI-supported-bright--green.svg)](#cli)
+[![Java API](https://img.shields.io/badge/Java_API-supported-bright--green.svg)](#java-api)
 <!---freshmark /shields -->
 
 Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
