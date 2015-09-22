@@ -28,7 +28,7 @@ import javax.script.ScriptException;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.jscriptbox.JScriptBox;
-import com.diffplug.jscriptbox.Language;
+import com.diffplug.jscriptbox.javascript.Nashorn;
 
 /**
  * FreshMark is designed to generate and modify
@@ -50,12 +50,12 @@ public class FreshMark extends CommentScript {
 	@Override
 	protected ScriptEngine setupScriptEngine(String section) throws ScriptException {
 		return JScriptBox.create()
-				.setAll(properties)
+				.setAllValid(properties)
 				.set("link").toFunc2(FreshMark::link)
 				.set("image").toFunc2(FreshMark::image)
 				.set("shield").toFunc4(FreshMark::shield)
 				.set("prefixDelimiterReplace").toFunc4(FreshMark::prefixDelimiterReplace)
-				.build(Language.javascript());
+				.build(Nashorn.language());
 	}
 
 	@Override

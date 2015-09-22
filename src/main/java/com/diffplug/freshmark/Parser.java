@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  * combines that output with the original document to generate
  * the final output.
  * 
- * @see ParserIntronExtron
+ * @see ParserIntronExon
  */
 public abstract class Parser {
 	/** Interface which can compile a single section of a FreshMark document. */
@@ -51,15 +51,7 @@ public abstract class Parser {
 	 */
 	protected abstract void bodyAndTags(String fullInput, ChunkHandler body, ChunkHandler tag);
 
-	/**
-	 * Reassembles a section/script/output chunk back into
-	 * the full file.
-	 * 
-	 * @param section
-	 * @param script
-	 * @param output
-	 * @return
-	 */
+	/** Reassembles a section/script/output chunk back into the full file. */
 	protected abstract String reassemble(String section, String script, String output);
 
 	/**
