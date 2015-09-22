@@ -7,19 +7,22 @@ output = [
 	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
 	'',
 	link(shield('Changelog', 'changelog', '{{version}}', 'bright-green'), 'CHANGES.md'),
-	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}')
+	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
 	'',
 	link(shield('Gradle', 'supported', 'https://github.com/diffplug/spotless#adding-spotless-to-java-source', 'green'), 'CHANGES.md'),
 	link(shield('CLI', 'supported', '{{version}}', 'green'), 'CHANGES.md'),
 	].join('\n')
 -->
-[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.durian%3Adurian-blue.svg)](https://bintray.com/diffplug/opensource/durian/view)
-[![Latest version](http://img.shields.io/badge/latest-3.2.0-blue.svg)](https://github.com/diffplug/durian/releases/latest)
-[![Javadoc](http://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/durian/javadoc/3.2.0/)
-[![License](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
+[![Latest version](https://img.shields.io/badge/latest-1.2.0-blue.svg)](https://github.com/diffplug/freshmark/releases/latest)
+[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/freshmark/javadoc/1.2.0/)
+[![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](http://img.shields.io/badge/changelog-3.3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
-[![Travis CI](https://travis-ci.org/diffplug/durian.svg?branch=master)](https://travis-ci.org/diffplug/durian)
+[![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-bright--green.svg)](CHANGES.md)
+[![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
+
+[![Gradle](https://img.shields.io/badge/supported-https%3A%2F%2Fgithub.com%2Fdiffplug%2Fspotless%23adding--spotless--to--java--source-green.svg)](CHANGES.md)
+[![CLI](https://img.shields.io/badge/supported-1.3.0--SNAPSHOT-green.svg)](CHANGES.md)
 <!---freshmark /shields -->
 
 Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
@@ -35,7 +38,10 @@ output = [
 	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
 	].join('\n')
 -->
-... (the results from the last time that FreshMark was run)
+[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
+[![Latest version](https://img.shields.io/badge/latest-1.2.0-blue.svg)](https://github.com/diffplug/freshmark/releases/latest)
+[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/freshmark/javadoc/1.2.0/)
+[![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 <!---freshmark /shields -->
 ```
 
@@ -43,9 +49,9 @@ In addition to generating Markdown from scratch, FreshMark can also modify exist
 
 ```javascript
 <!---freshmark javadoc
-output = prefixDelimReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable)
+output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable)
 -->
-To run FreshMark on some text, call [FreshMark.compile()](https://diffplug.github.io/freshmark/javadoc/1.0/com/diffplug/freshmark/FreshMark.html)
+To run FreshMark on some text, call [FreshMark.compile()](https://diffplug.github.io/freshmark/javadoc/1.2.0/com/diffplug/freshmark/FreshMark.html)
 <!---freshmark /javadoc -->
 ```
 
@@ -54,8 +60,10 @@ To run FreshMark on some text, call [FreshMark.compile()](https://diffplug.githu
 FreshMark has three pieces, `SECTION`, `SCRIPT`, and `BODY`.  They are parsed as shown below:
 
 ```javascript
-<!---freshmark SECTION (identifier)
-SCRIPT (javascript)
+<!---freshmark SECTION
+var SCRIPT = 'any javascript can go here';
+// this particular freshmark script isn't very useful
+output = input;
 -->
 BODY (markdown)
 <!---freshmark /SECTION -->
