@@ -9,9 +9,9 @@ output = [
 	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
 	'',
-	link(shield('Gradle', 'Gradle', 'supported', 'brightgreen'), '#gradle'),
-	link(shield('CLI', 'CLI', 'supported', 'brightgreen'), '#cli'),
-	link(shield('Java API', 'Java API', 'supported', 'brightgreen'), '#java-api'),
+	link(shield('Gradle', 'Works with', 'Gradle', 'ff69b4'), '#gradle'),
+	link(shield('CLI', 'Works with', 'CLI', 'ff69b4'), '#cli'),
+	link(shield('Java API', 'Works with', 'Java API', 'ff69b4'), '#java-api'),
 	].join('\n')
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.freshmark%3Afreshmark-blue.svg)](https://bintray.com/diffplug/opensource/freshmark/view)
@@ -22,9 +22,9 @@ output = [
 [![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
 
-[![Gradle](https://img.shields.io/badge/Gradle-supported-brightgreen.svg)](#gradle)
-[![CLI](https://img.shields.io/badge/CLI-supported-brightgreen.svg)](#cli)
-[![Java API](https://img.shields.io/badge/Java_API-supported-brightgreen.svg)](#java-api)
+[![Gradle](https://img.shields.io/badge/Works_with-Gradle-ff69b4.svg)](#gradle)
+[![CLI](https://img.shields.io/badge/Works_with-CLI-ff69b4.svg)](#cli)
+[![Java API](https://img.shields.io/badge/Works_with-Java_API-ff69b4.svg)](#java-api)
 <!---freshmark /shields -->
 
 Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
