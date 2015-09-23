@@ -28,6 +28,7 @@ targetCompatibility = VER_JAVA
 dependencies {
 	compile "com.diffplug.jscriptbox:jscriptbox:${VER_JSCRIPTBOX}"
 	compile "com.diffplug.durian:durian:${VER_DURIAN}"
+	compile "args4j:args4j:${VER_ARGS4J}"
 	testCompile "junit:junit:${VER_JUNIT}"
 }
 
@@ -125,6 +126,15 @@ javadoc {
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task freshmarkConsole(type: JavaExec, dependsOn: classes) {
+	description = 'Runs the FreshMark console'
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'com.diffplug.freshmark.FreshMarkConsole'
+	if (project.hasProperty('args')) {
+		args project.args.split('\\s+')
+	}
 }
 
 ////////////////

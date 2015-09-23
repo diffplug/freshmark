@@ -1,1 +1,2 @@
-gradlew run -Pargs="%*"
+@echo off
+gradlew -q freshmarkConsole -Pargs="%*"

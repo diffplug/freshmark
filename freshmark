@@ -1,1 +1,2 @@
-./gradlew run -Pargs="$*"
+#!/bin/sh
+./gradlew -q freshmarkConsole -Pargs="$*"

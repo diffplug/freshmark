@@ -8,6 +8,7 @@ output = [
 	'',
 	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
+	link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
 	'',
 	link(shield('Gradle', 'Works with', 'Gradle', 'ff69b4'), '#gradle'),
 	link(shield('Console', 'Works with', 'Console', 'ff69b4'), '#console'),
@@ -22,13 +23,15 @@ output = [
 
 [![Changelog](https://img.shields.io/badge/changelog-1.3.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
+[![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/freshmark)
 
 [![Gradle](https://img.shields.io/badge/Works_with-Gradle-ff69b4.svg)](#gradle)
-[![CLI](https://img.shields.io/badge/Works_with-CLI-ff69b4.svg)](#cli)
+[![Console](https://img.shields.io/badge/Works_with-Console-ff69b4.svg)](#console)
 [![Java API](https://img.shields.io/badge/Works_with-Java_API-ff69b4.svg)](#java-api)
+[![Contribute](https://img.shields.io/badge/Works_with-CONTRIBUTIONS_WELCOME-ff69b4.svg)](#how-to-run-it)
 <!---freshmark /shields -->
 
-Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript SCRIPTs into the comments of your Markdown, which statically generate the rest of the document.  By running these SCRIPTs as part of your build script, your project's documentation will always stay up-to-date.
+Generating URL's for the buttons above is tricky.  Once they're generated, it's hard to keep them up-to-date as new versions are released.  FreshMark solves the "Markdown with variables" problem by embedding tiny JavaScript scripts into the comments of your Markdown, which statically generate the rest of the document.  By running these scripts as part of your build script, your project's documentation will always stay up-to-date.
 
 Here is what the code looks like for the shields at the top of this document:
 
