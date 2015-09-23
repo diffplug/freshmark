@@ -16,16 +16,18 @@
 package com.diffplug.freshmark;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.script.ScriptException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
 
 public class ParserIntronExonTest {
-	static final Parser freshmarkParser = new FreshMark(null, null).parser;
+	static final Parser freshmarkParser = new FreshMark(new HashMap<>(), Consumers.doNothing()).parser;
 
 	@Test
 	public void testBodyAndTags() {
