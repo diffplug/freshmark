@@ -106,7 +106,7 @@ Integration with Gradle is provided through the [Spotless](https://github.com/di
 
 ```groovy
 plugins {
-	id 'com.diffplug.gradle.spotless' version '1.4.0'
+	id 'com.diffplug.gradle.spotless' version '1.3.1'
 }
 
 spotless {
@@ -121,9 +121,16 @@ See the [spotless docs](https://github.com/diffplug/spotless) for more details.
 This repo is a command line application.  Just run `freshmark.bat` (Windows) or `freshmark` (Linux and Mac) to run it.
 
 ```
-freshmark --help
-
-
+usage: freshmark [-P key=value] [-properties FILE] [-endings [PLATFORM_NATIVE | WINDOWS | UNIX]] -file FILE
+ -P                                     : sets the properties which are
+                                          available in the script, -P
+                                          KEY_1=VALUE_1 -P KEY_2=VALUE_2
+                                          (default: {prop=key})
+ -properties FILE                       : loads properties from the given file
+ -endings [PLATFORM_NATIVE | WINDOWS |  : determines the line endings to use in
+ UNIX]                                    the output (default: PLATFORM_NATIVE)
+ -file FILE                             : applies freshmark to the given file
+                                          (multiple are allowed)
 ```
 
 ### Java API
