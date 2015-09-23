@@ -17,12 +17,14 @@ package com.diffplug.freshmark;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -30,6 +32,8 @@ import java.util.Properties;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.MapOptionHandler;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class FreshMarkConsole {
 	/** Prints the usage for the given command. */
@@ -61,16 +65,17 @@ public class FreshMarkConsole {
 	private LineEnding lineEnding = LineEnding.PLATFORM_NATIVE;
 
 	@Option(name = "-P", handler = MapOptionHandler.class, usage = "sets the properties which are available in the script, -P KEY_1=VALUE_1 -P KEY_2=VALUE_2")
-	private Map<String, String> properties;
+	private Map<String, String> properties = new HashMap<>();
 
 	@Option(name = "-properties", usage = "loads properties from the given file")
 	private File propFile;
 
-	@Option(name = "-file", usage = "applies freshmark to the given file (multiple are allowed)")
+	@Option(name = "-file", required = true, usage = "applies freshmark to the given file (multiple are allowed)")
 	private List<File> files = new ArrayList<File>();
 
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 
+	@SuppressFBWarnings(value = {"REC_CATCH_EXCEPTION", "UR_UNINIT_READ"}, justification = "we don't want to bother the console user with stacktraces, and fields are set by args4j magic")
 	public FreshMarkConsole(String[] args) {
 		CmdLineParser parser = new CmdLineParser(this);
 		try {
@@ -78,7 +83,7 @@ public class FreshMarkConsole {
 			parser.parseArgument(args);
 			// make sure some files were specified
 			if (files.isEmpty()) {
-				throw new IllegalArgumentException("No files were specified.");
+				throw new IOException("No files were specified.");
 			}
 			// if a propFile was specified, load it and its contents to the properties map
 			if (propFile != null) {
