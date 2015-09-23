@@ -130,7 +130,7 @@ usage: freshmark [-P key=value] [-properties FILE] [-endings [PLATFORM_NATIVE | 
 
 ### Java API
 
-There's just four classes in the [package](src/main/java/com/diffplug/freshmark).  If you want to add more functions, change which variables are there, make the behavior depend on the section name, etc, just take a peek at [FreshMark.java](src/main/java/com/diffplug/freshmark/FreshMark.java).  If you want to build some other kind of "comment language" (generating sections of a document by embedding scripts in its comments) take a look at [CommentScript.java](https://github.com/diffplug/freshmark/blob/master/src/main/java/com/diffplug/freshmark/CommentScript.java) - it's not specific to markdown or HTML-style comments.
+It's a very small [package](src/main/java/com/diffplug/freshmark).  If you want to add more functions, change which variables are there, make the behavior depend on the section name, etc, just take a peek at [FreshMark.java](src/main/java/com/diffplug/freshmark/FreshMark.java).  If you want to build some other kind of "comment language" (generating sections of a document by embedding scripts in its comments) take a look at [CommentScript.java](https://github.com/diffplug/freshmark/blob/master/src/main/java/com/diffplug/freshmark/CommentScript.java) - it's not specific to markdown or HTML-style comments.
 
 ## Acknowledgements
 * Scripts run by [JScriptBox](https://github.com/diffplug/jscriptbox).
