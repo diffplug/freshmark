@@ -70,14 +70,17 @@ public abstract class Parser {
 		/** Associates errors with the part of the input that caused it. */
 		@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "It's a bug in FindBugs.  TODO: report")
 		class ErrorFormatter {
-			ChunkHandler wrap(Consumer<String> action) {
+			int lineOfLastTag;
+
+			ChunkHandler wrap(Consumer<String> action, boolean isTag) {
 				return (int startIdxFromRaw, String content) -> {
 					try {
 						action.accept(content);
+						lineOfLastTag = countNewlines(fullInput.substring(0, startIdxFromRaw));
 					} catch (Throwable e) {
 						if (e.getCause() instanceof ScriptException) {
 							ScriptException script = (ScriptException) e.getCause();
-							int problemStart = script.getLineNumber() + countNewlines(fullInput.substring(0, startIdxFromRaw));
+							int problemStart = script.getLineNumber() + lineOfLastTag - 1;
 							ScriptException wrappedScript = new ScriptException(script.getCause().getMessage(), script.getFileName(), problemStart, script.getColumnNumber());
 							wrappedScript.initCause(script.getCause());
 							throw wrappedScript;
@@ -156,7 +159,7 @@ public abstract class Parser {
 		}
 		ErrorFormatter error = new ErrorFormatter();
 		State state = new State();
-		bodyAndTags(fullInput, error.wrap(state::body), error.wrap(state::tag));
+		bodyAndTags(fullInput, error.wrap(state::body, false), error.wrap(state::tag, true));
 		state.finish();
 		return result.toString();
 	}
