@@ -17,8 +17,12 @@ package com.diffplug.freshmark;
 
 import java.util.Arrays;
 
+import javax.script.ScriptException;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.diffplug.common.base.Errors;
 
 public class ParserIntronExonTest {
 	static final Parser freshmarkParser = new FreshMark(null, null).parser;
@@ -32,10 +36,10 @@ public class ParserIntronExonTest {
 				"simple.txt",
 				"unclosed.txt",
 				"unclosedthenstuff.txt")
-				.forEach(ParserIntronExonTest::testCaseBodyAndTags);
+				.forEach(Errors.rethrow().wrap(ParserIntronExonTest::testCaseBodyAndTags));
 	}
 
-	static void testCaseBodyAndTags(String file) {
+	static void testCaseBodyAndTags(String file) throws ScriptException {
 		String raw = TestResource.getTestResource(file);
 		StringBuilder result = new StringBuilder(raw.length());
 		freshmarkParser.bodyAndTags(raw, (startIdx, body) -> {
@@ -48,18 +52,18 @@ public class ParserIntronExonTest {
 	}
 
 	@Test
-	public void testCompileNoTags() {
+	public void testCompileNoTags() throws ScriptException {
 		// no change reguired == no problem!
 		testCaseCompileSuccess("empty.txt", TestResource.getTestResource("empty.txt"));
 		testCaseCompileSuccess("nocomment.txt", TestResource.getTestResource("nocomment.txt"));
 	}
 
 	@Test
-	public void testCompileWiring() {
+	public void testCompileWiring() throws ScriptException {
 		testCaseCompileSuccess("simple.txt", TestResource.getTestResource("simple_compiled.txt"));
 	}
 
-	static void testCaseCompileSuccess(String file, String expected) {
+	static void testCaseCompileSuccess(String file, String expected) throws ScriptException {
 		String raw = TestResource.getTestResource(file);
 		String result = freshmarkParser.compile(raw, (section, program, in) -> {
 			return "section: " + section + "\nprogram: " + program + "input: " + in;

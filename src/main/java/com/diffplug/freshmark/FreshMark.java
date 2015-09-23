@@ -43,8 +43,8 @@ public class FreshMark extends CommentScript {
 
 	public FreshMark(Map<String, ?> properties, Consumer<String> warningStream) {
 		super(new ParserIntronExon(INTRON, EXON));
-		this.properties = properties;
-		this.warningStream = warningStream;
+		this.properties = Objects.requireNonNull(properties);
+		this.warningStream = Objects.requireNonNull(warningStream);
 	}
 
 	@Override

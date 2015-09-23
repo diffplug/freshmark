@@ -17,6 +17,8 @@ package com.diffplug.freshmark;
 
 import java.util.function.Consumer;
 
+import javax.script.ScriptException;
+
 /**
  * Parser splits text into tags and body sections, passes
  * pairs of matching sections to a {@link SectionCompiler}, then
@@ -39,7 +41,7 @@ public abstract class Parser {
 		 * @param startIdxFromRaw 	index of the start of content, relative to the beginning of the raw input
 		 * @param content			the content to be handled
 		 */
-		void handle(int startIdxFromRaw, String content);
+		void handle(int startIdxFromRaw, String content) throws ScriptException;
 	}
 
 	/**
@@ -48,8 +50,9 @@ public abstract class Parser {
 	 * @param fullInput	the raw input string
 	 * @param body		called for every chunk of text outside a tag
 	 * @param tag		called for every chunk of text inside a tag
+	 * @throws ScriptException 
 	 */
-	protected abstract void bodyAndTags(String fullInput, ChunkHandler body, ChunkHandler tag);
+	protected abstract void bodyAndTags(String fullInput, ChunkHandler body, ChunkHandler tag) throws ScriptException;
 
 	/** Reassembles a section/script/output chunk back into the full file. */
 	protected abstract String reassemble(String section, String script, String output);
@@ -60,8 +63,9 @@ public abstract class Parser {
 	 * @param fullInput	the raw input string
 	 * @param compiler	used to compile each section
 	 * @return 			the compiled output string
+	 * @throws ScriptException 
 	 */
-	public String compile(String fullInput, SectionCompiler compiler) {
+	public String compile(String fullInput, SectionCompiler compiler) throws ScriptException {
 		StringBuilder result = new StringBuilder(fullInput.length() * 3 / 2);
 		/** Associates errors with the part of the input that caused it. */
 		@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "It's a bug in FindBugs.  TODO: report")
@@ -71,8 +75,16 @@ public abstract class Parser {
 					try {
 						action.accept(content);
 					} catch (Throwable e) {
-						long problemStart = 1 + countNewlines(fullInput.substring(0, startIdxFromRaw));
-						throw new RuntimeException("Error on line " + problemStart + ": " + e.getMessage(), e);
+						if (e.getCause() instanceof ScriptException) {
+							ScriptException script = (ScriptException) e.getCause();
+							int problemStart = script.getLineNumber() + countNewlines(fullInput.substring(0, startIdxFromRaw));
+							ScriptException wrappedScript = new ScriptException(script.getCause().getMessage(), script.getFileName(), problemStart, script.getColumnNumber());
+							wrappedScript.initCause(script.getCause());
+							throw wrappedScript;
+						} else {
+							long problemStart = 1 + countNewlines(fullInput.substring(0, startIdxFromRaw));
+							throw new RuntimeException("Error on line " + problemStart + ": " + e.getMessage(), e);
+						}
 					}
 				};
 			}

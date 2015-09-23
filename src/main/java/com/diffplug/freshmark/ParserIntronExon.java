@@ -18,6 +18,8 @@ package com.diffplug.freshmark;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptException;
+
 /**
  * A parser defined by "intron" and "extron" chunks of text.
  * 
@@ -59,7 +61,7 @@ public class ParserIntronExon extends Parser {
 	 * @param tag		called for every chunk of text inside a tag
 	 */
 	@Override
-	protected void bodyAndTags(String rawInput, ChunkHandler body, ChunkHandler tag) {
+	protected void bodyAndTags(String rawInput, ChunkHandler body, ChunkHandler tag) throws ScriptException {
 		Matcher matcher = pattern.matcher(rawInput);
 		int last = 0;
 		while (matcher.find()) {

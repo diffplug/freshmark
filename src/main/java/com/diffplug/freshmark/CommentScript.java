@@ -81,7 +81,7 @@ public abstract class CommentScript implements Parser.SectionCompiler {
 	}
 
 	/** Compiles the given input string. Input must contain only unix newlines, output is guaranteed to be the same. */
-	public String compile(String input) {
+	public String compile(String input) throws ScriptException {
 		return parser.compile(input, this);
 	}
 

@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.ScriptException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +35,7 @@ public class FreshMarkTest {
 	}
 
 	@Test
-	public void testFull() {
+	public void testFull() throws ScriptException {
 		String before = TestResource.getTestResource("full_before.txt");
 		String after = TestResource.getTestResource("full_after.txt");
 
