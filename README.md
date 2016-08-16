@@ -8,7 +8,7 @@ output = [
 	'',
 	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
 	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
-	link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
+	link(shield('Live chat', 'gitter', 'chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}'),
 	'',
 	link(shield('Gradle', 'Works with', 'Gradle', 'ff69b4'), '#gradle'),
 	link(shield('Console', 'Works with', 'Console', 'ff69b4'), '#console'),
@@ -23,7 +23,7 @@ output = [
 
 [![Changelog](https://img.shields.io/badge/changelog-1.4.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/freshmark.svg?branch=master)](https://travis-ci.org/diffplug/freshmark)
-[![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/freshmark)
+[![Live chat](https://img.shields.io/badge/gitter-chat-brightgreen.svg)](https://gitter.im/diffplug/freshmark)
 
 [![Gradle](https://img.shields.io/badge/Works_with-Gradle-ff69b4.svg)](#gradle)
 [![Console](https://img.shields.io/badge/Works_with-Console-ff69b4.svg)](#console)
