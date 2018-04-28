@@ -1,10 +1,26 @@
 language: java
+
 jdk:
 - oraclejdk8
-script: "./.ci/ci.sh"
+
+stages:
+ - test
+ - name: deploy
+   if: (type = push) AND (branch = master) AND (head_repo = diffplug/freshmark)
+
+jobs:
+  include:
+    - stage: test
+      script: ./gradlew check
+    - stage: deploy
+      script:
+        - ./gradlew publish
+        - ./.ci/push-javadoc.sh
+
 before_cache:
-- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
