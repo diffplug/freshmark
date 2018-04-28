@@ -28,7 +28,7 @@ spotless {
     //    endWithNewline()
     //}
     format("extraneous") {
-        target("src/**/*.fxml", "src/**/*.css", "*.xml", "*.yml")
+        target("*.xml", "*.yml")
         trimTrailingWhitespace()
         indentWithSpaces()
         endWithNewline()
