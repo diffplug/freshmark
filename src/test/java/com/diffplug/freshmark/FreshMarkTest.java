@@ -15,27 +15,29 @@
  */
 package com.diffplug.freshmark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.script.ScriptException;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+class FreshMarkTest {
 
-public class FreshMarkTest {
 	@Test
-	public void testPrefixDelimReplacement() {
+	void testPrefixDelimReplacement() {
 		String before = TestResource.getTestResource("javadoc_before.txt");
 		String after = TestResource.getTestResource("javadoc_after.txt");
 		String afterActual = FreshMark.prefixDelimiterReplace(before, "https://diffplug.github.io/durian/javadoc/", "/", "4.0");
-		Assert.assertEquals(after, afterActual);
+		assertEquals(after, afterActual);
 	}
 
 	@Test
-	public void testFull() throws ScriptException {
+	void testFull() throws ScriptException {
 		String before = TestResource.getTestResource("full_before.txt");
 		String after = TestResource.getTestResource("full_after.txt");
 
@@ -48,7 +50,7 @@ public class FreshMarkTest {
 		List<String> warnings = new ArrayList<>();
 		CommentScript freshmark = new FreshMark(props, warnings::add);
 		String afterActual = freshmark.compile(before);
-		Assert.assertEquals(after, afterActual);
-		Assert.assertTrue(warnings.isEmpty());
+		assertEquals(after, afterActual);
+		assertTrue(warnings.isEmpty());
 	}
 }

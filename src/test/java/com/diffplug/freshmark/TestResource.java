@@ -15,25 +15,26 @@
  */
 package com.diffplug.freshmark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.diffplug.common.base.Errors;
+import org.junit.jupiter.api.Test;
 
-public class TestResource {
+class TestResource {
 	/** Returns the given test resource (with unix newlines). */
-	public static String getTestResource(String filename) {
+	static String getTestResource(String filename) {
 		return Errors.rethrow().get(() -> {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			InputStream inputStream = TestResource.class.getResourceAsStream("/" + filename);
-			byte[] buffer = new byte[1024];
-			int length = 0;
-			while ((length = inputStream.read(buffer)) != -1) {
-				baos.write(buffer, 0, length);
+			try (InputStream inputStream = TestResource.class.getResourceAsStream("/" + filename)) {
+				byte[] buffer = new byte[1024];
+				int length;
+				while ((length = inputStream.read(buffer)) != -1) {
+					baos.write(buffer, 0, length);
+				}
 			}
 			// return the string with unix line-endings
 			return new String(baos.toByteArray(), StandardCharsets.UTF_8).replace("\r\n", "\n");
@@ -41,8 +42,8 @@ public class TestResource {
 	}
 
 	@Test
-	public void testResources() {
-		Assert.assertEquals("", getTestResource("empty.txt"));
-		Assert.assertEquals("Some stuff\nNothing special", getTestResource("nocomment.txt"));
+	void testResources() {
+		assertEquals("", getTestResource("empty.txt"));
+		assertEquals("Some stuff\nNothing special", getTestResource("nocomment.txt"));
 	}
 }

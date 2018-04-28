@@ -15,13 +15,14 @@
  */
 package com.diffplug.freshmark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -31,18 +32,19 @@ import com.diffplug.common.base.StringPrinter;
 import com.diffplug.freshmark.FreshMarkConsole.LineEnding;
 
 public class FreshMarkConsoleTest {
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	/** Returns a File (in a temporary folder) which has the given contents. */
-	protected File createTestFile(String filename, String content) throws IOException {
+	private File createTestFile(String filename, String content) throws IOException {
 		File file = folder.newFile(filename);
 		Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
 		return file;
 	}
 
 	/** Standard test case. */
-	private void testCase(File toRead, String filenameAfter, String args, String consoleOutput) throws IOException {
+	private void testCase(File toRead, String filenameAfter, String args, String consoleOutput) {
 		String consoleOutputActual = StringPrinter.buildString(printer -> {
 			PrintStream out = System.out;
 			PrintStream err = System.err;
@@ -55,7 +57,7 @@ public class FreshMarkConsoleTest {
 				// check the result
 				String result = new String(Files.readAllBytes(toRead.toPath()), StandardCharsets.UTF_8)
 						.replace(LineEnding.WINDOWS.string, LineEnding.UNIX.string);
-				Assert.assertEquals(TestResource.getTestResource(filenameAfter), result);
+				assertEquals(TestResource.getTestResource(filenameAfter), result);
 			} catch (Exception e) {
 				throw Errors.asRuntime(e);
 			} finally {
@@ -64,7 +66,7 @@ public class FreshMarkConsoleTest {
 			}
 		});
 		consoleOutputActual = consoleOutputActual.replace(LineEnding.WINDOWS.string, LineEnding.UNIX.string);
-		Assert.assertEquals(consoleOutput, consoleOutputActual);
+		assertEquals(consoleOutput, consoleOutputActual);
 	}
 
 	@Test

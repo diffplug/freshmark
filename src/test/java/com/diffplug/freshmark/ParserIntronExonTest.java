@@ -15,22 +15,23 @@
  */
 package com.diffplug.freshmark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.script.ScriptException;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
+import org.junit.jupiter.api.Test;
 
-public class ParserIntronExonTest {
-	static final Parser freshmarkParser = new FreshMark(new HashMap<>(), Consumers.doNothing()).parser;
+class ParserIntronExonTest {
+	private static final Parser freshmarkParser = new FreshMark(new HashMap<>(), Consumers.doNothing()).parser;
 
 	@Test
-	public void testBodyAndTags() {
+	void testBodyAndTags() {
 		Arrays.asList("empty.txt",
 				"mismatched.txt",
 				"nocomment.txt",
@@ -41,7 +42,7 @@ public class ParserIntronExonTest {
 				.forEach(Errors.rethrow().wrap(ParserIntronExonTest::testCaseBodyAndTags));
 	}
 
-	static void testCaseBodyAndTags(String file) throws ScriptException {
+	private static void testCaseBodyAndTags(String file) throws ScriptException {
 		String raw = TestResource.getTestResource(file);
 		StringBuilder result = new StringBuilder(raw.length());
 		freshmarkParser.bodyAndTags(raw, (startIdx, body) -> {
@@ -54,48 +55,47 @@ public class ParserIntronExonTest {
 	}
 
 	@Test
-	public void testCompileNoTags() throws ScriptException {
+	void testCompileNoTags() throws ScriptException {
 		// no change reguired == no problem!
 		testCaseCompileSuccess("empty.txt", TestResource.getTestResource("empty.txt"));
 		testCaseCompileSuccess("nocomment.txt", TestResource.getTestResource("nocomment.txt"));
 	}
 
 	@Test
-	public void testCompileWiring() throws ScriptException {
+	void testCompileWiring() throws ScriptException {
 		testCaseCompileSuccess("simple.txt", TestResource.getTestResource("simple_compiled.txt"));
 	}
 
-	static void testCaseCompileSuccess(String file, String expected) throws ScriptException {
+	private static void testCaseCompileSuccess(String file, String expected) throws ScriptException {
 		String raw = TestResource.getTestResource(file);
-		String result = freshmarkParser.compile(raw, (section, program, in) -> {
-			return "section: " + section + "\nprogram: " + program + "input: " + in;
-		});
-		Assert.assertEquals(expected, result);
+		String result = freshmarkParser.compile(raw, (section, program, in)
+				-> "section: " + section + "\nprogram: " + program + "input: " + in);
+		assertEquals(expected, result);
 	}
 
 	@Test
-	public void testCompileUnclosed() {
+	void testCompileUnclosed() {
 		testCaseCompileError("unclosed.txt", "Ended without a close tag for 'simple'");
 		testCaseCompileError("unclosedthenstuff.txt", "Ended without a close tag for 'simple'");
 	}
 
 	@Test
-	public void testCompileMismatched() {
+	void testCompileMismatched() {
 		testCaseCompileError("mismatched.txt", "Error on line 7: Expecting '/simple'");
 	}
 
 	@Test
-	public void testCompileNoProgram() {
+	void testCompileNoProgram() {
 		testCaseCompileError("noprogram.txt", "Error on line 3: Section doesn't contain a script.");
 	}
 
-	static void testCaseCompileError(String file, String expected) {
+	private static void testCaseCompileError(String file, String expected) {
 		String raw = TestResource.getTestResource(file);
 		try {
 			freshmarkParser.compile(raw, (section, program, in) -> in);
-			Assert.fail("Expected an error");
+			fail("Expected an error");
 		} catch (Throwable e) {
-			Assert.assertEquals(expected, e.getMessage());
+			assertEquals(expected, e.getMessage());
 		}
 	}
 }

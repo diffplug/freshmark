@@ -15,17 +15,18 @@
  */
 package com.diffplug.freshmark;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+class CommentScriptTest {
 
-public class CommentScriptTest {
 	@Test
-	public void testMustacheTemplate() {
+	void testMustacheTemplate() {
 		String before = TestResource.getTestResource("template_before.txt");
 		String after = TestResource.getTestResource("template_after.txt");
 		String afterActual = CommentScript.mustacheTemplate(before, key -> key.toUpperCase(Locale.US));
-		Assert.assertEquals(after, afterActual);
+		assertEquals(after, afterActual);
 	}
 }
