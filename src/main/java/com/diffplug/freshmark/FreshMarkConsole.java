@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 DiffPlug
+ * Copyright (C) 2015-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,12 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.MapOptionHandler;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class FreshMarkConsole {
 	/** Prints the usage for the given command. */
@@ -75,7 +72,6 @@ public class FreshMarkConsole {
 
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 
-	@SuppressFBWarnings(value = {"REC_CATCH_EXCEPTION", "UR_UNINIT_READ"}, justification = "we don't want to bother the console user with stacktraces, and fields are set by args4j magic")
 	public FreshMarkConsole(String[] args) {
 		CmdLineParser parser = new CmdLineParser(this);
 		try {
