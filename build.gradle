@@ -17,6 +17,9 @@ dependencies {
 	implementation 'com.diffplug.durian:durian-core:1.2.0'
 	implementation 'args4j:args4j:2.33'
 	testImplementation 'junit:junit:4.13.2'
+	if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+		testImplementation 'org.openjdk.nashorn:nashorn-core:15.4'
+	}
 }
 
 apply from: 干.file('base/maven.gradle')
